@@ -9,9 +9,6 @@ import images from './images';
 const Container = styled.div`
   display: inline-block;
 `;
-const CardImageWrapper = styled.div`
-  height: 1em;
-`;
 const FieldWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -19,9 +16,6 @@ const FieldWrapper = styled.div`
   background-color: white;
   padding: 10px;
   border-radius: 3px;
-  border: 1px solid transparent;
-  box-shadow: 0 1px 3px 0 #e6ebf1;
-  transition: box-shadow 150ms ease;
 
   &.is-invalid {
     border: 1px solid #ff3860;
@@ -69,13 +63,15 @@ class CreditCardInput extends Component {
   static propTypes = {
     cardExpiryInputProps: PropTypes.object,
     cardNumberInputProps: PropTypes.object,
-    cardCVCInputProps: PropTypes.object
+    cardCVCInputProps: PropTypes.object,
+    fieldClassName: PropTypes.string
   };
 
   static defaultProps = {
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
-    cardCVCInputProps: {}
+    cardCVCInputProps: {},
+    fieldClassName: ''
   };
 
   constructor(props) {
@@ -238,19 +234,17 @@ class CreditCardInput extends Component {
     const {
       cardExpiryInputProps,
       cardNumberInputProps,
-      cardCVCInputProps
+      cardCVCInputProps,
+      fieldClassName
     } = this.props;
     return (
       <Container>
-        <FieldWrapper id="field-wrapper">
-          <CardImageWrapper>
-            <CardImage src={cardImage} />
-          </CardImageWrapper>
+        <FieldWrapper id="field-wrapper" className={fieldClassName}>
+          <CardImage src={cardImage} />
           <InputWrapper data-max="9999 9999 9999 9999 9999">
             <Input
               id="card-number"
               alwaysShowMask={false}
-              className="input"
               pattern="[0-9]*"
               placeholder="Card number"
               type="text"

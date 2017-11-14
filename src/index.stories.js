@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import styled from 'styled-components';
 import CreditCardInput from '.';
+import './index.stories.css';
 
 const Container = styled.div`
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
@@ -25,5 +26,10 @@ storiesOf('CreditCardInput', module)
         cardExpiryInputProps={{ value: '05 / 21' }}
         cardCVCInputProps={{ value: '100' }}
       />
+    </Container>
+  ))
+  .add('custom field wrapper class', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput fieldClassName="custom-input" />
     </Container>
   ));
