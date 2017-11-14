@@ -17,14 +17,16 @@
     "prettier": "prettier --config .prettierrc --write 'src/**/*.js'",
     "prettier:list-diff": "prettier --config .prettierrc --list-different 'src/**/*.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook:build": "build-storybook -c .storybook -o docs/",
     "test": "npm run lint && npm run prettier:list-diff"
   },
   "dependencies": {
     "babel-loader": "^7.1.2",
-    "css-loader": "^0.28.7",
+    "credit-card-type": "^6.1.0",
     "file-loader": "^1.1.5",
+    "payment": "^2.3.0",
+    "prop-types": "^15.6.0",
     "react-svg": "^2.1.22",
-    "style-loader": "^0.19.0",
     "styled-components": "^2.2.3",
     "webpack": "^3.8.1"
   },
@@ -38,6 +40,8 @@
     "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.11.0",
     "eslint-config-react-app": "^2.0.1",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
     "prettier": "^1.8.2",
@@ -59,7 +63,8 @@
     ],
     "parser": "babel-eslint",
     "rules": {
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "jsx-a11y/href-no-hash": 0
     }
   }
 }

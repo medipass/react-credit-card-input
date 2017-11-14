@@ -2,44 +2,28 @@ const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
-	entry: './src/index.js',
+  entry: './src/index.js',
 
-	output: {
-		filename: 'index.js',
-		path: path.resolve(__dirname, 'lib')
-	},
+  output: {
+    filename: 'index.js',
+    path: path.resolve(__dirname, 'lib')
+  },
 
-	module: {
-		rules: [
-			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
 
-				options: {
-					presets: ['es2015', 'stage-0', 'react']
-				}
+        options: {
+          presets: ['es2015', 'stage-0', 'react']
+        }
       },
       {
-				test: /\.css$/,
-
-				use: [
-					{
-						loader: 'style-loader',
-
-						options: {
-							sourceMap: true
-						}
-					},
-					{
-						loader: 'css-loader'
-					}
-				]
-			},
-      {
-				test: /\.svg$/,
-				loader: 'file-loader'
-			}
-		]
-	}
+        test: /\.svg$/,
+        loader: 'file-loader'
+      }
+    ]
+  }
 };
