@@ -2,6 +2,10 @@
 
 > A credit/debit card input field for React
 
+## Example
+
+[Click here for an interactive demo](https://medipass.github.io/react-credit-card-input)
+
 ![](./example.gif)
 
 
