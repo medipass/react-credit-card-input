@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -6,7 +5,8 @@ module.exports = {
 
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'lib')
+    path: path.resolve(__dirname, 'lib'),
+    libraryTarget: 'commonjs2'
   },
 
   module: {
@@ -19,10 +19,6 @@ module.exports = {
         options: {
           presets: ['es2015', 'stage-0', 'react']
         }
-      },
-      {
-        test: /\.svg$/,
-        loader: 'file-loader'
       }
     ]
   }

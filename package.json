@@ -23,10 +23,8 @@
   "dependencies": {
     "babel-loader": "^7.1.2",
     "credit-card-type": "^6.1.0",
-    "file-loader": "^1.1.5",
     "payment": "^2.3.0",
     "prop-types": "^15.6.0",
-    "react-svg": "^2.1.22",
     "styled-components": "^2.2.3",
     "webpack": "^3.8.1"
   },
