@@ -1,0 +1,16 @@
+<svg viewBox="0 0 576 377" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>placeholder</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="placeholder">
+            <path d="M527.933793,376.99828 L48.0662069,376.99828 C35.4234803,377.103968 23.2565864,372.18789 14.2423281,363.331618 C5.22806975,354.475346 0.104917102,342.404407 0,329.774494 L0,47.2254554 C0.104917102,34.5955425 5.22806975,22.524604 14.2423281,13.6683319 C23.2565864,4.81205985 35.4234803,-0.104018296 48.0662069,0.00166948646 L527.933793,0.00166948646 C540.57652,-0.104018296 552.743414,4.81205985 561.757672,13.6683319 C570.77193,22.524604 575.895083,34.5955425 576,47.2254554 L576,329.972913 C575.672786,356.195663 554.184273,377.218857 527.933793,376.99828 Z" id="shape" fill="#E8EBEE" fill-rule="nonzero"></path>
+            <rect id="Rectangle" stroke="#757575" stroke-width="20" x="418" y="58" width="91" height="63" rx="30"></rect>
+            <rect id="Rectangle-2" fill="#757575" x="53" y="208" width="107" height="40" rx="8"></rect>
+            <rect id="Rectangle-2" fill="#757575" x="413" y="208" width="107" height="40" rx="8"></rect>
+            <rect id="Rectangle-2" fill="#757575" x="293" y="208" width="107" height="40" rx="8"></rect>
+            <rect id="Rectangle-2" fill="#757575" x="173" y="208" width="107" height="40" rx="8"></rect>
+        </g>
+    </g>
+</svg>

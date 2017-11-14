@@ -1,3 +1,11 @@
 * {
   font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 16px;
+  font-variant: normal;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card-image-wrapper div {
+  height: 1em;
 }
