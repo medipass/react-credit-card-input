@@ -2,6 +2,8 @@
 
 > A credit/debit card input field for React
 
+![](./example.gif)
+
 
 ## Install
 
