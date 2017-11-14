@@ -9,16 +9,25 @@
     "email": "jake@medipass.io",
     "url": "https://medipass.com.au"
   },
+  "main": "lib/index.js",
   "scripts": {
-    "build": "rimraf lib && babel --presets babel-preset-es2015,babel-preset-stage-0,babel-preset-react -d lib/ index.js",
+    "build": "rimraf lib && webpack",
     "prepublish": "npm run build",
     "lint": "eslint src/",
     "prettier": "prettier --config .prettierrc --write 'src/**/*.js'",
     "prettier:list-diff": "prettier --config .prettierrc --list-different 'src/**/*.js'",
+    "storybook": "start-storybook -p 9001 -c .storybook",
     "test": "npm run lint && npm run prettier:list-diff"
   },
-  "dependencies": {},
+  "dependencies": {
+    "babel-loader": "^7.1.2",
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.0",
+    "file-loader": "^1.1.5",
+    "webpack": "^3.8.1"
+  },
   "devDependencies": {
+    "@storybook/react": "^3.2.15",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
