@@ -31,7 +31,6 @@ import CreditCardInput from 'react-credit-card-input';
 
 ## Available props
 
-
 <table>
 <thead><tr><th>Prop</th><th>Type</th><th>Default value</th><th>Description</th></tr></thead>
 <tbody>
@@ -39,8 +38,28 @@ import CreditCardInput from 'react-credit-card-input';
   <tr><td>  cardExpiryInputProps </td><td>object (optional)</td><td>{}</td> <td>Card expiry date input element props<br/>(e.g. { value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur })</td></tr>
   <tr><td>  cardCVCInputProps </td><td>object (optional)</td><td>{}</td> <td>Card CVC input element props<br/>(e.g. { value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur })</td></tr>
   <tr><td>  fieldClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the field</td></tr>
+  <tr><td>  inputComponent </td><td>string, function, class (optional)</td><td>'input'</td> <td>Input component for the card number, expiry and CVC input</td></tr>
 </tbody>
 </table>
+
+## Integrating with form libraries
+
+### redux-form usage
+
+Note: this is using redux-form v6!
+
+```js
+import { Field } from 'redux-form'
+import CreditCardInput from 'react-credit-card-input';
+
+<CreditCardInput
+  fieldClassName="input"
+  inputComponent={Field}
+  cardNumberInputProps={{ name: 'cardNumber' }}
+  cardExpiryInputProps={{ name: 'expiryDate' }}
+  cardCVCInputProps={{ name: 'cvc' }}
+/>
+```
 
 ## License
 
