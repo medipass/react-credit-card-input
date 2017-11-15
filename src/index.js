@@ -4,7 +4,7 @@ import payment from 'payment';
 import creditCardType from 'credit-card-type';
 import styled from 'styled-components';
 
-import images from './images';
+import images from './utils/images';
 
 const Container = styled.div`
   display: inline-block;
@@ -35,15 +35,16 @@ const InputWrapper = styled.label`
     visibility: hidden;
     height: 0;
   }
-`;
-const Input = styled.input`
-  border: 0px;
-  position: absolute;
-  width: 100%;
-  font-size: 16px;
 
-  &:focus {
-    outline: 0px;
+  & .credit-card-input {
+    border: 0px;
+    position: absolute;
+    width: 100%;
+    font-size: 16px;
+
+    &:focus {
+      outline: 0px;
+    }
   }
 `;
 const DangerText = styled.p`
@@ -64,14 +65,20 @@ class CreditCardInput extends Component {
     cardExpiryInputProps: PropTypes.object,
     cardNumberInputProps: PropTypes.object,
     cardCVCInputProps: PropTypes.object,
-    fieldClassName: PropTypes.string
+    fieldClassName: PropTypes.string,
+    inputComponent: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.object,
+      PropTypes.string
+    ])
   };
 
   static defaultProps = {
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
     cardCVCInputProps: {},
-    fieldClassName: ''
+    fieldClassName: '',
+    inputComponent: 'input'
   };
 
   constructor(props) {
@@ -235,7 +242,8 @@ class CreditCardInput extends Component {
       cardExpiryInputProps,
       cardNumberInputProps,
       cardCVCInputProps,
-      fieldClassName
+      fieldClassName,
+      inputComponent: Input
     } = this.props;
     return (
       <Container>
@@ -244,10 +252,11 @@ class CreditCardInput extends Component {
           <InputWrapper data-max="9999 9999 9999 9999 9999">
             <Input
               id="card-number"
-              alwaysShowMask={false}
+              className="credit-card-input"
               pattern="[0-9]*"
               placeholder="Card number"
               type="text"
+              component="input"
               {...cardNumberInputProps}
               onBlur={this.handleCardNumberBlur}
               onChange={this.handleCardNumberChange}
@@ -256,9 +265,11 @@ class CreditCardInput extends Component {
           <InputWrapper data-max="MM / YY 99">
             <Input
               id="card-expiry"
+              className="credit-card-input"
               pattern="[0-9]*"
               placeholder="MM / YY"
               type="text"
+              component="input"
               {...cardExpiryInputProps}
               onBlur={this.handleCardExpiryBlur}
               onChange={this.handleCardExpiryChange}
@@ -268,9 +279,11 @@ class CreditCardInput extends Component {
           <InputWrapper data-max="999999">
             <Input
               id="cvc"
+              className="credit-card-input"
               pattern="[0-9]*"
               placeholder="CVC"
               type="text"
+              component="input"
               {...cardCVCInputProps}
               onBlur={this.handleCVCBlur}
               onChange={this.handleCVCChange}
