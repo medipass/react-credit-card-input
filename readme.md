@@ -63,4 +63,4 @@ import CreditCardInput from 'react-credit-card-input';
 
 ## License
 
-MIT © [jxom](https://medipass.com.au)
+MIT © [Medipass Solutions](https://medipass.com.au)
