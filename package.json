@@ -14,6 +14,7 @@
     "build": "rimraf lib && webpack",
     "prepublish": "npm run build",
     "lint": "eslint src/",
+    "fix": "npm run lint -- --fix && npm run prettier",
     "prettier": "prettier --config .prettierrc --write 'src/**/*.js'",
     "prettier:list-diff": "prettier --config .prettierrc --list-different 'src/**/*.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
