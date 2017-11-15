@@ -8,6 +8,7 @@ import images from './utils/images';
 
 const Container = styled.div`
   display: inline-block;
+  ${({ styled }) => ({ ...styled })};
 `;
 const FieldWrapper = styled.div`
   display: flex;
@@ -16,13 +17,16 @@ const FieldWrapper = styled.div`
   background-color: white;
   padding: 10px;
   border-radius: 3px;
+  ${({ styled }) => ({ ...styled })};
 
   &.is-invalid {
     border: 1px solid #ff3860;
+    ${({ invalidStyled }) => ({ ...invalidStyled })};
   }
 `;
 const CardImage = styled.img`
   height: 1em;
+  ${({ styled }) => ({ ...styled })};
 `;
 const InputWrapper = styled.label`
   position: relative;
@@ -40,7 +44,8 @@ const InputWrapper = styled.label`
     border: 0px;
     position: absolute;
     width: 100%;
-    font-size: 16px;
+    font-size: 1em;
+    ${({ inputStyled }) => ({ ...inputStyled })};
 
     &:focus {
       outline: 0px;
@@ -51,6 +56,7 @@ const DangerText = styled.p`
   font-size: 0.8rem;
   margin: 5px 0 0 0;
   color: #ff3860;
+  ${({ styled }) => ({ ...styled })};
 `;
 
 const BACKSPACE_KEY_CODE = 8;
@@ -65,20 +71,38 @@ class CreditCardInput extends Component {
     cardExpiryInputProps: PropTypes.object,
     cardNumberInputProps: PropTypes.object,
     cardCVCInputProps: PropTypes.object,
+    containerClassName: PropTypes.string,
+    containerStyle: PropTypes.object,
+    dangerTextClassName: PropTypes.string,
+    dangerTextStyle: PropTypes.object,
     fieldClassName: PropTypes.string,
+    fieldStyle: PropTypes.object,
     inputComponent: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.object,
       PropTypes.string
-    ])
+    ]),
+    invalidClassName: PropTypes.string,
+    inputClassName: PropTypes.string,
+    inputStyle: PropTypes.object,
+    invalidStyle: PropTypes.object
   };
 
   static defaultProps = {
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
     cardCVCInputProps: {},
+    containerClassName: '',
+    containerStyle: {},
+    dangerTextClassName: '',
+    dangerTextStyle: {},
     fieldClassName: '',
-    inputComponent: 'input'
+    fieldStyle: {},
+    inputComponent: 'input',
+    inputClassName: '',
+    inputStyle: {},
+    invalidClassName: 'is-invalid',
+    invalidStyle: {}
   };
 
   constructor(props) {
@@ -227,12 +251,14 @@ class CreditCardInput extends Component {
   }
 
   setFieldInvalid(errorText) {
-    document.getElementById('field-wrapper').classList.add('is-invalid');
+    const { invalidClassName } = this.props;
+    document.getElementById('field-wrapper').classList.add(invalidClassName);
     this.setState({ errorText });
   }
 
   setFieldValid(errorText) {
-    document.getElementById('field-wrapper').classList.remove('is-invalid');
+    const { invalidClassName } = this.props;
+    document.getElementById('field-wrapper').classList.remove(invalidClassName);
     this.setState({ errorText: null });
   }
 
@@ -242,17 +268,39 @@ class CreditCardInput extends Component {
       cardExpiryInputProps,
       cardNumberInputProps,
       cardCVCInputProps,
+      cardImageClassName,
+      cardImageStyle,
+      containerClassName,
+      containerStyle,
+      dangerTextClassName,
+      dangerTextStyle,
       fieldClassName,
-      inputComponent: Input
+      fieldStyle,
+      inputComponent: Input,
+      inputClassName,
+      inputStyle,
+      invalidStyle
     } = this.props;
     return (
-      <Container>
-        <FieldWrapper id="field-wrapper" className={fieldClassName}>
-          <CardImage src={cardImage} />
-          <InputWrapper data-max="9999 9999 9999 9999 9999">
+      <Container className={containerClassName} styled={containerStyle}>
+        <FieldWrapper
+          id="field-wrapper"
+          className={fieldClassName}
+          styled={fieldStyle}
+          invalidStyled={invalidStyle}
+        >
+          <CardImage
+            className={cardImageClassName}
+            styled={cardImageStyle}
+            src={cardImage}
+          />
+          <InputWrapper
+            inputStyled={inputStyle}
+            data-max="9999 9999 9999 9999 9999"
+          >
             <Input
               id="card-number"
-              className="credit-card-input"
+              className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="Card number"
               type="text"
@@ -262,10 +310,10 @@ class CreditCardInput extends Component {
               onChange={this.handleCardNumberChange}
             />
           </InputWrapper>
-          <InputWrapper data-max="MM / YY 99">
+          <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
             <Input
               id="card-expiry"
-              className="credit-card-input"
+              className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="MM / YY"
               type="text"
@@ -276,10 +324,10 @@ class CreditCardInput extends Component {
               onKeyDown={this.handleKeyDown('card-number')}
             />
           </InputWrapper>
-          <InputWrapper data-max="999999">
+          <InputWrapper inputStyled={inputStyle} data-max="999999">
             <Input
               id="cvc"
-              className="credit-card-input"
+              className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="CVC"
               type="text"
@@ -291,7 +339,11 @@ class CreditCardInput extends Component {
             />
           </InputWrapper>
         </FieldWrapper>
-        {errorText && <DangerText>{errorText}</DangerText>}
+        {errorText && (
+          <DangerText className={dangerTextClassName} styled={dangerTextStyle}>
+            {errorText}
+          </DangerText>
+        )}
       </Container>
     );
   }

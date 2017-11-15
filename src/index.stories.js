@@ -28,8 +28,42 @@ storiesOf('CreditCardInput', module)
       />
     </Container>
   ))
-  .add('custom field wrapper class', () => (
+  .add('custom styling (container)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
-      <CreditCardInput fieldClassName="custom-input" />
+      <CreditCardInput
+        containerClassName="custom-container"
+        containerStyle={{
+          backgroundColor: 'gray',
+          padding: '20px',
+          fontSize: '30px'
+        }}
+      />
+    </Container>
+  ))
+  .add('custom styling (field wrapper)', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput
+        fieldClassName="custom-field"
+        fieldStyle={{ padding: '20px', color: 'gray' }}
+        invalidClassName="is-invalid-custom"
+        invalidStyle={{ border: '3px solid red' }}
+      />
+    </Container>
+  ))
+  .add('custom styling (input)', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput
+        inputClassName="custom-input"
+        inputStyle={{ color: 'red' }}
+      />
+    </Container>
+  ))
+  .add('custom styling (danger text)', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput
+        dangerTextClassName="custom-danger-text"
+        dangerTextStyle={{ color: 'green' }}
+        invalidStyle={{ border: '1px solid green' }}
+      />
     </Container>
   ));

@@ -1,4 +1,17 @@
-.custom-input {
+.custom-field {
   box-shadow: 0 1px 3px 0 rgb(212, 212, 212);
-  border: 1px solid pink;
+  border: 3px solid teal;
+}
+
+.custom-container {
+  border: 3px solid pink;
+}
+
+.custom-input {
+  border: 1px solid gray !important;
+}
+
+.custom-danger-text {
+  font-size: 1rem;
+  border-bottom: 1px solid green;
 }
