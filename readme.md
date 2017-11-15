@@ -74,6 +74,28 @@ import CreditCardInput from 'react-credit-card-input';
 />
 ```
 
+## Contributing
+
+Contributing to `react-credit-card-input` is easy! With four simple steps:
+
+### Create a branch
+
+1. Fork the repository
+1. `git clone <your-repo-url>` to clone your GitHub repo to your local one
+1. `git pull origin master` to pull the latest code
+1. `npm install` to install the project's dependencies
+1. `git checkout -b the-name-of-my-branch` to create a branch (use something short and comprehensible, such as: `fix-card-number-issue`).
+  
+### Make the change
+
+### Test the change
+1. If applicable, run `npm run storybook`, navigate to http://localhost:9001/ and ensure your UI changes work.
+1. Run `npm run fix` from the project root (This will run Prettier and ESLint and automatically fix any issues).
+
+### Push the change!
+1. `git add -A && git commit -m "My message (#issue-number/pr-number)"` (replacing `My message (#issue-number/pr-number)` with a commit message, such as `Fixed card number issue (#43)`) to stage and commit your changes
+1. `git push my-fork-name the-name-of-my-branch`
+
 ## License
 
 MIT © [Medipass Solutions](https://medipass.com.au)
