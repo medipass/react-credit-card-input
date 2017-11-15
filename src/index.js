@@ -71,6 +71,8 @@ class CreditCardInput extends Component {
     cardExpiryInputProps: PropTypes.object,
     cardNumberInputProps: PropTypes.object,
     cardCVCInputProps: PropTypes.object,
+    cardImageClassName: PropTypes.string,
+    cardImageStyle: PropTypes.object,
     containerClassName: PropTypes.string,
     containerStyle: PropTypes.object,
     dangerTextClassName: PropTypes.string,
@@ -82,9 +84,9 @@ class CreditCardInput extends Component {
       PropTypes.object,
       PropTypes.string
     ]),
-    invalidClassName: PropTypes.string,
     inputClassName: PropTypes.string,
     inputStyle: PropTypes.object,
+    invalidClassName: PropTypes.string,
     invalidStyle: PropTypes.object
   };
 
@@ -92,6 +94,8 @@ class CreditCardInput extends Component {
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
     cardCVCInputProps: {},
+    cardImageClassName: '',
+    cardImageStyle: {},
     containerClassName: '',
     containerStyle: {},
     dangerTextClassName: '',
