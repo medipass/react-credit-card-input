@@ -88,8 +88,9 @@ Contributing to `react-credit-card-input` is easy! With four simple steps:
   
 ### Make the change
 
-### Test the change
-1. If applicable, run `npm run storybook`, navigate to http://localhost:9001/ and ensure your UI changes work.
+Note: You can run `npm run storybook`, and then navigate to http://localhost:9001/ to interactively develop your changes. If you are developing a new feature, make sure to add a story for it!
+
+### Test the change 
 1. Run `npm run fix` from the project root (This will run Prettier and ESLint and automatically fix any issues).
 
 ### Push the change!
