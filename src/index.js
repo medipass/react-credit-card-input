@@ -304,7 +304,7 @@ class CreditCardInput extends Component {
           >
             <Input
               id="card-number"
-              autocomplete="cc-number"
+              autoComplete="cc-number"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="Card number"
@@ -318,7 +318,7 @@ class CreditCardInput extends Component {
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
             <Input
               id="card-expiry"
-              autocomplete="cc-exp"
+              autoComplete="cc-exp"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="MM / YY"
@@ -333,7 +333,7 @@ class CreditCardInput extends Component {
           <InputWrapper inputStyled={inputStyle} data-max="999999">
             <Input
               id="cvc"
-              autocomplete="cc-csc"
+              autoComplete="cc-csc"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
               placeholder="CVC"
