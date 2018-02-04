@@ -9,7 +9,6 @@ export default {
     globals: {
       react: 'React',
       'react-dom': 'ReactDOM',
-      'prop-types': 'PropTypes',
       payment: 'payment',
       'credit-card-type': 'creditCardType',
       'styled-components': 'styled'
@@ -20,12 +19,11 @@ export default {
     'react-dom',
     'credit-card-type',
     'payment',
-    'styled-components',
-    'prop-types'
+    'styled-components'
   ],
   plugins: [
     babel({
-      presets: [['env', { modules: false }], 'react'],
+      presets: [['env', { modules: false }], 'react', 'flow'],
       plugins: [
         'external-helpers',
         'transform-class-properties',

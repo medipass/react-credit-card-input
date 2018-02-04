@@ -1,5 +1,6 @@
+// @flow
+
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import payment from 'payment';
 import creditCardType from 'credit-card-type';
 import styled from 'styled-components';
@@ -66,29 +67,35 @@ const CARD_TYPES = {
   amex: 'AMERICAN_EXPRESS'
 };
 
-class CreditCardInput extends Component {
-  static propTypes = {
-    cardExpiryInputProps: PropTypes.object,
-    cardNumberInputProps: PropTypes.object,
-    cardCVCInputProps: PropTypes.object,
-    cardImageClassName: PropTypes.string,
-    cardImageStyle: PropTypes.object,
-    containerClassName: PropTypes.string,
-    containerStyle: PropTypes.object,
-    dangerTextClassName: PropTypes.string,
-    dangerTextStyle: PropTypes.object,
-    fieldClassName: PropTypes.string,
-    fieldStyle: PropTypes.object,
-    inputComponent: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.object,
-      PropTypes.string
-    ]),
-    inputClassName: PropTypes.string,
-    inputStyle: PropTypes.object,
-    invalidClassName: PropTypes.string,
-    invalidStyle: PropTypes.object
-  };
+type Props = {
+  cardExpiryInputProps: Object,
+  cardNumberInputProps: Object,
+  cardCVCInputProps: Object,
+  cardImageClassName: string,
+  cardImageStyle: Object,
+  containerClassName: string,
+  containerStyle: Object,
+  dangerTextClassName: string,
+  dangerTextStyle: Object,
+  fieldClassName: string,
+  fieldStyle: Object,
+  inputComponent: Function | Object | string,
+  inputClassName: string,
+  inputStyle: Object,
+  invalidClassName: string,
+  invalidStyle: Object
+};
+type State = {
+  cardImage: string,
+  cardNumberLength: number,
+  cardNumber: string,
+  errorText: ?string
+};
+
+class CreditCardInput extends Component<Props, State> {
+  cardExpiryField: any;
+  cardNumberField: any;
+  cvcField: any;
 
   static defaultProps = {
     cardExpiryInputProps: {},
@@ -109,7 +116,7 @@ class CreditCardInput extends Component {
     invalidStyle: {}
   };
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       cardImage: images.placeholder,
@@ -117,26 +124,17 @@ class CreditCardInput extends Component {
       cardNumber: props.cardNumberInputProps.value,
       errorText: null
     };
-    this.handleCardNumberBlur = this.handleCardNumberBlur.bind(this);
-    this.handleCardNumberChange = this.handleCardNumberChange.bind(this);
-    this.handleCardExpiryBlur = this.handleCardExpiryBlur.bind(this);
-    this.handleCardExpiryChange = this.handleCardExpiryChange.bind(this);
-    this.handleCVCBlur = this.handleCVCBlur.bind(this);
-    this.handleCVCChange = this.handleCVCChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.setFieldInvalid = this.setFieldInvalid.bind(this);
-    this.setFieldValid = this.setFieldValid.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const { cardNumber } = this.state;
     const cardType = payment.fns.cardType(cardNumber);
     this.setState({
       cardImage: images[cardType] || images.placeholder
     });
-  }
+  };
 
-  handleCardNumberBlur(e) {
+  handleCardNumberBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardNumber(e.target.value)) {
       this.setFieldInvalid('Card number is invalid');
     }
@@ -145,9 +143,9 @@ class CreditCardInput extends Component {
     if (cardNumberInputProps.onBlur) {
       cardNumberInputProps.onBlur(e);
     }
-  }
+  };
 
-  handleCardNumberChange(e) {
+  handleCardNumberChange = (e: SyntheticInputEvent<*>) => {
     const cardNumber = e.target.value;
     const cardNumberLength = cardNumber.split(' ').join('').length;
     const cardType = payment.fns.cardType(cardNumber);
@@ -170,7 +168,7 @@ class CreditCardInput extends Component {
           length === cardNumberLength &&
           payment.fns.validateCardNumber(cardNumber)
         ) {
-          document.getElementById('card-expiry').focus();
+          this.cardExpiryField.focus();
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
@@ -183,9 +181,9 @@ class CreditCardInput extends Component {
     if (cardNumberInputProps.onChange) {
       cardNumberInputProps.onChange(e);
     }
-  }
+  };
 
-  handleCardExpiryBlur(e) {
+  handleCardExpiryBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardExpiry(e.target.value)) {
       this.setFieldInvalid('Expiry date is invalid');
     }
@@ -194,9 +192,9 @@ class CreditCardInput extends Component {
     if (cardExpiryInputProps.onBlur) {
       cardExpiryInputProps.onBlur(e);
     }
-  }
+  };
 
-  handleCardExpiryChange(e) {
+  handleCardExpiryChange = (e: SyntheticInputEvent<*>) => {
     const cardExpiry = e.target.value;
     const cardExpiryLength = cardExpiry.split(' / ').join('').length;
     payment.formatCardExpiry(document.getElementById('card-expiry'));
@@ -204,7 +202,7 @@ class CreditCardInput extends Component {
     this.setFieldValid();
     if (cardExpiryLength >= 4) {
       if (payment.fns.validateCardExpiry(cardExpiry)) {
-        document.getElementById('cvc').focus();
+        this.cvcField.focus();
       } else {
         this.setFieldInvalid('Expiry date is invalid');
       }
@@ -214,9 +212,9 @@ class CreditCardInput extends Component {
     if (cardExpiryInputProps.onChange) {
       cardExpiryInputProps.onChange(e);
     }
-  }
+  };
 
-  handleCVCBlur(e) {
+  handleCVCBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardCVC(e.target.value)) {
       this.setFieldInvalid('CVC is invalid');
     }
@@ -225,9 +223,9 @@ class CreditCardInput extends Component {
     if (cardCVCInputProps.onBlur) {
       cardCVCInputProps.onBlur(e);
     }
-  }
+  };
 
-  handleCVCChange(e) {
+  handleCVCChange = (e: SyntheticInputEvent<*>) => {
     const CVC = e.target.value;
     const CVCLength = CVC.length;
     payment.formatCardCVC(document.getElementById('cvc'));
@@ -244,29 +242,31 @@ class CreditCardInput extends Component {
     if (cardCVCInputProps.onChange) {
       cardCVCInputProps.onChange(e);
     }
-  }
+  };
 
-  handleKeyDown(targetFocusId) {
-    return e => {
+  handleKeyDown = (ref: any) => {
+    return (e: SyntheticInputEvent<*>) => {
       if (e.keyCode === BACKSPACE_KEY_CODE && !e.target.value) {
-        document.getElementById(targetFocusId).focus();
+        ref.focus();
       }
     };
-  }
+  };
 
-  setFieldInvalid(errorText) {
+  setFieldInvalid = (errorText: string) => {
     const { invalidClassName } = this.props;
+    // $FlowFixMe
     document.getElementById('field-wrapper').classList.add(invalidClassName);
     this.setState({ errorText });
-  }
+  };
 
-  setFieldValid(errorText) {
+  setFieldValid = () => {
     const { invalidClassName } = this.props;
+    // $FlowFixMe
     document.getElementById('field-wrapper').classList.remove(invalidClassName);
     this.setState({ errorText: null });
-  }
+  };
 
-  render() {
+  render = () => {
     const { cardImage, errorText } = this.state;
     const {
       cardExpiryInputProps,
@@ -304,6 +304,9 @@ class CreditCardInput extends Component {
           >
             <Input
               id="card-number"
+              ref={cardNumberField => {
+                this.cardNumberField = cardNumberField;
+              }}
               autoComplete="cc-number"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
@@ -318,6 +321,9 @@ class CreditCardInput extends Component {
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
             <Input
               id="card-expiry"
+              ref={cardExpiryField => {
+                this.cardExpiryField = cardExpiryField;
+              }}
               autoComplete="cc-exp"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
@@ -327,12 +333,15 @@ class CreditCardInput extends Component {
               {...cardExpiryInputProps}
               onBlur={this.handleCardExpiryBlur}
               onChange={this.handleCardExpiryChange}
-              onKeyDown={this.handleKeyDown('card-number')}
+              onKeyDown={this.handleKeyDown(this.cardNumberField)}
             />
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="999999">
             <Input
               id="cvc"
+              ref={cvcField => {
+                this.cvcField = cvcField;
+              }}
               autoComplete="cc-csc"
               className={`credit-card-input ${inputClassName}`}
               pattern="[0-9]*"
@@ -342,7 +351,7 @@ class CreditCardInput extends Component {
               {...cardCVCInputProps}
               onBlur={this.handleCVCBlur}
               onChange={this.handleCVCChange}
-              onKeyDown={this.handleKeyDown('card-expiry')}
+              onKeyDown={this.handleKeyDown(this.cardExpiryField)}
             />
           </InputWrapper>
         </FieldWrapper>
@@ -353,7 +362,7 @@ class CreditCardInput extends Component {
         )}
       </Container>
     );
-  }
+  };
 }
 
 export default CreditCardInput;
