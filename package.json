@@ -11,7 +11,7 @@
   },
   "main": "lib/index.js",
   "scripts": {
-    "build": "rimraf lib && webpack",
+    "build": "rimraf lib && rollup -c rollup.config.js",
     "prepublish": "npm run build",
     "lint": "eslint src/",
     "fix": "npm run lint -- --fix && npm run prettier",
@@ -26,16 +26,16 @@
     "credit-card-type": "^6.1.0",
     "payment": "^2.3.0",
     "prop-types": "^15.6.0",
-    "styled-components": "^2.2.3",
-    "webpack": "^3.8.1"
+    "styled-components": "^2.2.3"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.15",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "eslint": "^4.11.0",
@@ -47,7 +47,9 @@
     "prettier": "^1.8.2",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "rollup": "^0.54.1",
+    "rollup-plugin-babel": "^3.0.3"
   },
   "peerDependencies": {
     "react": "^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0",
