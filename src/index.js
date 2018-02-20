@@ -73,6 +73,14 @@ const CARD_TYPES = {
 };
 
 type Props = {
+  cardCVCKeyDownMessageType?: string,
+  cardCVCBlurredMessageType?: string,
+  cardCVCChangedMessageType?: string,
+  cardExpiryKeyDownMessageType?: string,
+  cardExpiryBlurredMessageType?: string,
+  cardExpiryChangedMessageType?: string,
+  cardNumberBlurredMessageType?: string,
+  cardNumberChangedMessageType?: string,
   cardExpiryInputProps: Object,
   cardNumberInputProps: Object,
   cardCVCInputProps: Object,
@@ -107,6 +115,14 @@ class CreditCardInput extends Component<Props, State> {
   cvcField: any;
 
   static defaultProps = {
+    cardCVCKeyDownMessageType: null,
+    cardCVCBlurredMessageType: null,
+    cardCVCChangedMessageType: null,
+    cardExpiryKeyDownMessageType: null,
+    cardExpiryBlurredMessageType: null,
+    cardExpiryChangedMessageType: null,
+    cardNumberBlurredMessageType: null,
+    cardNumberChangedMessageType: null,
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
     cardCVCInputProps: {},
@@ -140,7 +156,17 @@ class CreditCardInput extends Component<Props, State> {
   }
 
   componentDidMount = () => {
-    const { cardNumberIframeSrc } = this.props;
+    const {
+      cardCVCKeyDownMessageType,
+      cardCVCBlurredMessageType,
+      cardCVCChangedMessageType,
+      cardExpiryKeyDownMessageType,
+      cardExpiryBlurredMessageType,
+      cardExpiryChangedMessageType,
+      cardNumberBlurredMessageType,
+      cardNumberChangedMessageType,
+      cardNumberIframeSrc
+    } = this.props;
     const { cardNumber } = this.state;
     const cardType = payment.fns.cardType(cardNumber);
     this.setState({
@@ -152,25 +178,31 @@ class CreditCardInput extends Component<Props, State> {
         'message',
         message => {
           if (message.data) {
-            if (message.data.type === 'card-number-input-changed') {
+            if (message.data.type === cardNumberChangedMessageType) {
               this.handleCardNumberChange(message.data.e);
             }
-            if (message.data.type === 'card-number-input-blurred') {
+            if (message.data.type === cardNumberBlurredMessageType) {
               this.handleCardNumberBlur(message.data.e);
             }
-            if (message.data.type === 'card-expiry-input-changed') {
+            if (message.data.type === cardExpiryChangedMessageType) {
               this.handleCardExpiryChange(message.data.e);
             }
-            if (message.data.type === 'card-expiry-input-blurred') {
+            if (message.data.type === cardExpiryBlurredMessageType) {
               this.handleCardExpiryBlur(message.data.e);
             }
-            if (message.data.type === 'card-cvc-input-keydown') {
+            if (message.data.type === cardCVCChangedMessageType) {
+              this.handleCVCChange(message.data.e);
+            }
+            if (message.data.type === cardCVCBlurredMessageType) {
+              this.handleCVCBlur(message.data.e);
+            }
+            if (message.data.type === cardCVCKeyDownMessageType) {
               this.handleKeyDown({
                 targetIframeId: 'card-expiry-iframe',
                 messageType: 'focus-card-expiry'
               })(message.data.e);
             }
-            if (message.data.type === 'card-expiry-input-keydown') {
+            if (message.data.type === cardExpiryKeyDownMessageType) {
               this.handleKeyDown({
                 targetIframeId: 'card-number-iframe',
                 messageType: 'focus-card-number'
@@ -308,9 +340,13 @@ class CreditCardInput extends Component<Props, State> {
   };
 
   handleCVCChange = (e: SyntheticInputEvent<*>) => {
+    const { cardCVCIframeSrc } = this.props;
     const CVC = e.target.value;
     const CVCLength = CVC.length;
-    payment.formatCardCVC(document.getElementById('cvc'));
+
+    if (!cardCVCIframeSrc) {
+      payment.formatCardCVC(document.getElementById('cvc'));
+    }
 
     this.setFieldValid();
     if (CVCLength >= 4) {
