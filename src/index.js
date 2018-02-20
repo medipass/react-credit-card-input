@@ -29,6 +29,11 @@ const CardImage = styled.img`
   height: 1em;
   ${({ styled }) => ({ ...styled })};
 `;
+const Iframe = styled.iframe`
+  height: 1rem;
+  position: absolute;
+  width 100%;
+`;
 const InputWrapper = styled.label`
   position: relative;
   margin-left: 0.5em;
@@ -73,12 +78,16 @@ type Props = {
   cardCVCInputProps: Object,
   cardImageClassName: string,
   cardImageStyle: Object,
+  cardCVCIframeSrc: ?string,
+  cardExpiryIframeSrc: ?string,
+  cardNumberIframeSrc: ?string,
   containerClassName: string,
   containerStyle: Object,
   dangerTextClassName: string,
   dangerTextStyle: Object,
   fieldClassName: string,
   fieldStyle: Object,
+  iframeOrigin?: string,
   inputComponent: Function | Object | string,
   inputClassName: string,
   inputStyle: Object,
@@ -103,12 +112,16 @@ class CreditCardInput extends Component<Props, State> {
     cardCVCInputProps: {},
     cardImageClassName: '',
     cardImageStyle: {},
+    cardCVCIframeSrc: null,
+    cardExpiryIframeSrc: null,
+    cardNumberIframeSrc: null,
     containerClassName: '',
     containerStyle: {},
     dangerTextClassName: '',
     dangerTextStyle: {},
     fieldClassName: '',
     fieldStyle: {},
+    iframeOrigin: null,
     inputComponent: 'input',
     inputClassName: '',
     inputStyle: {},
@@ -127,11 +140,47 @@ class CreditCardInput extends Component<Props, State> {
   }
 
   componentDidMount = () => {
+    const { cardNumberIframeSrc } = this.props;
     const { cardNumber } = this.state;
     const cardType = payment.fns.cardType(cardNumber);
     this.setState({
       cardImage: images[cardType] || images.placeholder
     });
+
+    if (cardNumberIframeSrc) {
+      window.addEventListener(
+        'message',
+        message => {
+          if (message.data) {
+            if (message.data.type === 'card-number-input-changed') {
+              this.handleCardNumberChange(message.data.e);
+            }
+            if (message.data.type === 'card-number-input-blurred') {
+              this.handleCardNumberBlur(message.data.e);
+            }
+            if (message.data.type === 'card-expiry-input-changed') {
+              this.handleCardExpiryChange(message.data.e);
+            }
+            if (message.data.type === 'card-expiry-input-blurred') {
+              this.handleCardExpiryBlur(message.data.e);
+            }
+            if (message.data.type === 'card-cvc-input-keydown') {
+              this.handleKeyDown({
+                targetIframeId: 'card-expiry-iframe',
+                messageType: 'focus-card-expiry'
+              })(message.data.e);
+            }
+            if (message.data.type === 'card-expiry-input-keydown') {
+              this.handleKeyDown({
+                targetIframeId: 'card-number-iframe',
+                messageType: 'focus-card-number'
+              })(message.data.e);
+            }
+          }
+        },
+        false
+      );
+    }
   };
 
   handleCardNumberBlur = (e: SyntheticInputEvent<*>) => {
@@ -146,6 +195,11 @@ class CreditCardInput extends Component<Props, State> {
   };
 
   handleCardNumberChange = (e: SyntheticInputEvent<*>) => {
+    const {
+      cardExpiryIframeSrc,
+      cardNumberIframeSrc,
+      iframeOrigin
+    } = this.props;
     const cardNumber = e.target.value;
     const cardNumberLength = cardNumber.split(' ').join('').length;
     const cardType = payment.fns.cardType(cardNumber);
@@ -158,7 +212,9 @@ class CreditCardInput extends Component<Props, State> {
       cardNumber
     });
 
-    payment.formatCardNumber(document.getElementById('card-number'));
+    if (!cardNumberIframeSrc) {
+      payment.formatCardNumber(document.getElementById('card-number'));
+    }
 
     this.setFieldValid();
     if (cardTypeLengths) {
@@ -168,7 +224,18 @@ class CreditCardInput extends Component<Props, State> {
           length === cardNumberLength &&
           payment.fns.validateCardNumber(cardNumber)
         ) {
-          this.cardExpiryField.focus();
+          if (cardExpiryIframeSrc) {
+            // $FlowFixMe
+            document
+              .getElementById('card-expiry-iframe')
+              .contentWindow.postMessage(
+                { type: 'focus-card-expiry' },
+                iframeOrigin
+              ); // TODO: change origin
+          }
+          if (this.cardExpiryField) {
+            this.cardExpiryField.focus();
+          }
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
@@ -195,14 +262,29 @@ class CreditCardInput extends Component<Props, State> {
   };
 
   handleCardExpiryChange = (e: SyntheticInputEvent<*>) => {
+    const { cardCVCIframeSrc, cardExpiryIframeSrc, iframeOrigin } = this.props;
     const cardExpiry = e.target.value;
-    const cardExpiryLength = cardExpiry.split(' / ').join('').length;
-    payment.formatCardExpiry(document.getElementById('card-expiry'));
+    const cardExpiryLength = cardExpiry.split('/').join('').length;
+
+    if (!cardExpiryIframeSrc) {
+      payment.formatCardExpiry(document.getElementById('card-expiry'));
+    }
 
     this.setFieldValid();
     if (cardExpiryLength >= 4) {
       if (payment.fns.validateCardExpiry(cardExpiry)) {
-        this.cvcField.focus();
+        if (cardCVCIframeSrc) {
+          // $FlowFixMe
+          document
+            .getElementById('card-cvc-iframe')
+            .contentWindow.postMessage(
+              { type: 'focus-card-cvc' },
+              iframeOrigin
+            ); // TODO: change origin
+        }
+        if (this.cvcField) {
+          this.cvcField.focus();
+        }
       } else {
         this.setFieldInvalid('Expiry date is invalid');
       }
@@ -244,10 +326,27 @@ class CreditCardInput extends Component<Props, State> {
     }
   };
 
-  handleKeyDown = (ref: any) => {
+  handleKeyDown = ({
+    ref,
+    targetIframeId,
+    messageType
+  }: {
+    ref?: any,
+    targetIframeId?: string,
+    messageType?: string
+  }) => {
     return (e: SyntheticInputEvent<*>) => {
       if (e.keyCode === BACKSPACE_KEY_CODE && !e.target.value) {
-        ref.focus();
+        if (ref) {
+          ref.focus();
+        }
+        if (targetIframeId) {
+          const { iframeOrigin } = this.props;
+          // $FlowFixMe
+          document
+            .getElementById(targetIframeId)
+            .contentWindow.postMessage({ type: messageType }, iframeOrigin); // TODO: change origin
+        }
       }
     };
   };
@@ -274,6 +373,9 @@ class CreditCardInput extends Component<Props, State> {
       cardCVCInputProps,
       cardImageClassName,
       cardImageStyle,
+      cardCVCIframeSrc,
+      cardExpiryIframeSrc,
+      cardNumberIframeSrc,
       containerClassName,
       containerStyle,
       dangerTextClassName,
@@ -302,57 +404,69 @@ class CreditCardInput extends Component<Props, State> {
             inputStyled={inputStyle}
             data-max="9999 9999 9999 9999 9999"
           >
-            <Input
-              id="card-number"
-              ref={cardNumberField => {
-                this.cardNumberField = cardNumberField;
-              }}
-              autoComplete="cc-number"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
-              placeholder="Card number"
-              type="text"
-              component="input"
-              {...cardNumberInputProps}
-              onBlur={this.handleCardNumberBlur}
-              onChange={this.handleCardNumberChange}
-            />
+            {cardNumberIframeSrc ? (
+              <Iframe id="card-number-iframe" src={cardNumberIframeSrc} />
+            ) : (
+              <Input
+                id="card-number"
+                ref={cardNumberField => {
+                  this.cardNumberField = cardNumberField;
+                }}
+                autoComplete="cc-number"
+                className={`credit-card-input ${inputClassName}`}
+                pattern="[0-9]*"
+                placeholder="Card number"
+                type="text"
+                component="input"
+                {...cardNumberInputProps}
+                onBlur={this.handleCardNumberBlur}
+                onChange={this.handleCardNumberChange}
+              />
+            )}
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
-            <Input
-              id="card-expiry"
-              ref={cardExpiryField => {
-                this.cardExpiryField = cardExpiryField;
-              }}
-              autoComplete="cc-exp"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
-              placeholder="MM / YY"
-              type="text"
-              component="input"
-              {...cardExpiryInputProps}
-              onBlur={this.handleCardExpiryBlur}
-              onChange={this.handleCardExpiryChange}
-              onKeyDown={this.handleKeyDown(this.cardNumberField)}
-            />
+            {cardExpiryIframeSrc ? (
+              <Iframe id="card-expiry-iframe" src={cardExpiryIframeSrc} />
+            ) : (
+              <Input
+                id="card-expiry"
+                ref={cardExpiryField => {
+                  this.cardExpiryField = cardExpiryField;
+                }}
+                autoComplete="cc-exp"
+                className={`credit-card-input ${inputClassName}`}
+                pattern="[0-9]*"
+                placeholder="MM / YY"
+                type="text"
+                component="input"
+                {...cardExpiryInputProps}
+                onBlur={this.handleCardExpiryBlur}
+                onChange={this.handleCardExpiryChange}
+                onKeyDown={this.handleKeyDown({ ref: this.cardNumberField })}
+              />
+            )}
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="999999">
-            <Input
-              id="cvc"
-              ref={cvcField => {
-                this.cvcField = cvcField;
-              }}
-              autoComplete="cc-csc"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
-              placeholder="CVC"
-              type="text"
-              component="input"
-              {...cardCVCInputProps}
-              onBlur={this.handleCVCBlur}
-              onChange={this.handleCVCChange}
-              onKeyDown={this.handleKeyDown(this.cardExpiryField)}
-            />
+            {cardCVCIframeSrc ? (
+              <Iframe id="card-cvc-iframe" src={cardCVCIframeSrc} />
+            ) : (
+              <Input
+                id="cvc"
+                ref={cvcField => {
+                  this.cvcField = cvcField;
+                }}
+                autoComplete="cc-csc"
+                className={`credit-card-input ${inputClassName}`}
+                pattern="[0-9]*"
+                placeholder="CVC"
+                type="text"
+                component="input"
+                {...cardCVCInputProps}
+                onBlur={this.handleCVCBlur}
+                onChange={this.handleCVCChange}
+                onKeyDown={this.handleKeyDown({ ref: this.cardExpiryField })}
+              />
+            )}
           </InputWrapper>
         </FieldWrapper>
         {errorText && (

@@ -1,5 +1,5 @@
 {
-  "name": "react-credit-card-input",
+  "name": "@medipass/secure-react-credit-card-input",
   "version": "0.4.4",
   "description": "A credit/debit card input field for React",
   "license": "MIT",
@@ -20,7 +20,8 @@
     "prettier:list-diff": "prettier --config .prettierrc --list-different 'src/**/*.js'",
     "storybook": "start-storybook -p 9001 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o docs/",
-    "test": "npm run lint && npm run flow && npm run prettier:list-diff"
+    "test": "npm run lint && npm run flow && npm run prettier:list-diff",
+    "watch": "rollup -c rollup.config.js -w"
   },
   "dependencies": {
     "babel-loader": "^7.1.2",
