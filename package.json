@@ -10,6 +10,13 @@
     "url": "https://medipass.com.au"
   },
   "main": "lib/index.js",
+  "keywords": [
+    "credit",
+    "debit",
+    "card",
+    "input",
+    "cvc"
+  ],
   "scripts": {
     "build": "rimraf lib && rollup -c rollup.config.js",
     "prepublish": "npm run build",
