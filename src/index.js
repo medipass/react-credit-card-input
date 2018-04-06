@@ -155,6 +155,8 @@ class CreditCardInput extends Component<Props, State> {
     };
   }
 
+  getCreditCardErrorText = () => this.state.errorText;
+
   componentDidMount = () => {
     const {
       cardCVCKeyDownMessageType,
