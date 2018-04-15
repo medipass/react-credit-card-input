@@ -169,7 +169,11 @@ class CreditCardInput extends Component<Props, State> {
           length === cardNumberLength &&
           payment.fns.validateCardNumber(cardNumber)
         ) {
-          this.cardExpiryField.focus();
+          if (this.cardExpiryField.getRenderedComponent) {
+            this.cardExpiryField.getRenderedComponent().focus();
+          } else {
+            this.cardExpiryField.focus();
+          }
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
@@ -208,7 +212,11 @@ class CreditCardInput extends Component<Props, State> {
       if (expiryError) {
         this.setFieldInvalid(expiryError);
       } else {
-        this.cvcField.focus();
+        if (this.cvcField.getRenderedComponent) {
+          this.cvcField.getRenderedComponent().focus();
+        } else {
+          this.cvcField.focus();
+        }
       }
     }
 
@@ -251,7 +259,11 @@ class CreditCardInput extends Component<Props, State> {
   handleKeyDown = (ref: any) => {
     return (e: SyntheticInputEvent<*>) => {
       if (e.keyCode === BACKSPACE_KEY_CODE && !e.target.value) {
-        ref.focus();
+        if (ref.getRenderedComponent) {
+          ref.getRenderedComponent().focus();
+        } else {
+          ref.focus();
+        }
       }
     };
   };
@@ -307,6 +319,7 @@ class CreditCardInput extends Component<Props, State> {
             data-max="9999 9999 9999 9999 9999"
           >
             <Input
+              withRef
               id="card-number"
               ref={cardNumberField => {
                 this.cardNumberField = cardNumberField;
@@ -324,6 +337,7 @@ class CreditCardInput extends Component<Props, State> {
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
             <Input
+              withRef
               id="card-expiry"
               ref={cardExpiryField => {
                 this.cardExpiryField = cardExpiryField;
@@ -342,6 +356,7 @@ class CreditCardInput extends Component<Props, State> {
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="999999">
             <Input
+              withRef
               id="cvc"
               ref={cvcField => {
                 this.cvcField = cvcField;
