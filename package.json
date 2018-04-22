@@ -3,7 +3,7 @@
   "version": "0.4.6",
   "description": "A credit/debit card input field for React",
   "license": "MIT",
-  "repository": "jxom/react-credit-card-input",
+  "repository": "github:medipass/react-credit-card-input",
   "author": {
     "name": "jxom",
     "email": "jake@medipass.io",

@@ -85,6 +85,7 @@ Contributing to `react-credit-card-input` is easy! With four simple steps:
 1. `git pull origin master` to pull the latest code
 1. `npm install` to install the project's dependencies
 1. `git checkout -b the-name-of-my-branch` to create a branch (use something short and comprehensible, such as: `fix-card-number-issue`).
+1. `git remote add upstream https://github.com/medipass/react-credit-card-input.git` and `git pull upstream master` to update your fork from this source.
   
 ### Make the change
 
