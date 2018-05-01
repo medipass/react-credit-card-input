@@ -2,3 +2,5 @@ node_modules
 lib/
 .DS_Store
 .idea/
+package-lock.json
+yarn.lock
