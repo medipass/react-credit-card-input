@@ -16,21 +16,30 @@ const Container = styled.div`
 storiesOf('CreditCardInput', module)
   .add('default', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
-      <CreditCardInput />
+      <CreditCardInput
+        cardCVCInputRenderer={props => <input {...props} />}
+        cardExpiryInputRenderer={props => <input {...props} />}
+        cardNumberInputRenderer={props => <input {...props} />}
+      />
     </Container>
   ))
   .add('with pre-filled values', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardNumberInputProps={{ value: '4242 4242 4242 4242' }}
-        cardExpiryInputProps={{ value: '05 / 21' }}
-        cardCVCInputProps={{ value: '100' }}
+        cardCVCInputRenderer={props => <input {...props} value="100" />}
+        cardExpiryInputRenderer={props => <input {...props} value="05 / 21" />}
+        cardNumberInputRenderer={props => (
+          <input {...props} value="4242 4242 4242 4242" />
+        )}
       />
     </Container>
   ))
   .add('custom styling (container)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
+        cardCVCInputRenderer={props => <input {...props} />}
+        cardExpiryInputRenderer={props => <input {...props} />}
+        cardNumberInputRenderer={props => <input {...props} />}
         containerClassName="custom-container"
         containerStyle={{
           backgroundColor: 'gray',
@@ -43,6 +52,9 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (field wrapper)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
+        cardCVCInputRenderer={props => <input {...props} />}
+        cardExpiryInputRenderer={props => <input {...props} />}
+        cardNumberInputRenderer={props => <input {...props} />}
         fieldClassName="custom-field"
         fieldStyle={{ padding: '20px', color: 'gray' }}
         invalidClassName="is-invalid-custom"
@@ -53,6 +65,9 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (input)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
+        cardCVCInputRenderer={props => <input {...props} />}
+        cardExpiryInputRenderer={props => <input {...props} />}
+        cardNumberInputRenderer={props => <input {...props} />}
         inputClassName="custom-input"
         inputStyle={{ color: 'red' }}
       />
@@ -61,6 +76,9 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (danger text)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
+        cardCVCInputRenderer={props => <input {...props} />}
+        cardExpiryInputRenderer={props => <input {...props} />}
+        cardNumberInputRenderer={props => <input {...props} />}
         dangerTextClassName="custom-danger-text"
         dangerTextStyle={{ color: 'green' }}
         invalidStyle={{ border: '1px solid green' }}

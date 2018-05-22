@@ -76,9 +76,9 @@ const CARD_TYPES = {
 };
 
 type Props = {
-  cardExpiryInputProps: Object,
-  cardNumberInputProps: Object,
-  cardCVCInputProps: Object,
+  cardCVCInputRenderer: Function,
+  cardExpiryInputRenderer: Function,
+  cardNumberInputRenderer: Function,
   cardImageClassName: string,
   cardImageStyle: Object,
   containerClassName: string,
@@ -96,7 +96,7 @@ type Props = {
 type State = {
   cardImage: string,
   cardNumberLength: number,
-  cardNumber: string,
+  cardNumber: ?string,
   errorText: ?string
 };
 
@@ -129,16 +129,17 @@ class CreditCardInput extends Component<Props, State> {
     this.state = {
       cardImage: images.placeholder,
       cardNumberLength: 0,
-      cardNumber: props.cardNumberInputProps.value,
+      cardNumber: null,
       errorText: null
     };
   }
 
   componentDidMount = () => {
-    const { cardNumber } = this.state;
-    const cardType = payment.fns.cardType(cardNumber);
-    this.setState({
-      cardImage: images[cardType] || images.placeholder
+    this.setState({ cardNumber: this.cardNumberField.value }, () => {
+      const cardType = payment.fns.cardType(this.state.cardNumber);
+      this.setState({
+        cardImage: images[cardType] || images.placeholder
+      });
     });
   };
 
@@ -151,11 +152,6 @@ class CreditCardInput extends Component<Props, State> {
   handleCardNumberBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardNumber(e.target.value)) {
       this.setFieldInvalid('Card number is invalid');
-    }
-
-    const { cardNumberInputProps } = this.props;
-    if (cardNumberInputProps.onBlur) {
-      cardNumberInputProps.onBlur(e);
     }
   };
 
@@ -195,11 +191,6 @@ class CreditCardInput extends Component<Props, State> {
         }
       }
     }
-
-    const { cardNumberInputProps } = this.props;
-    if (cardNumberInputProps.onChange) {
-      cardNumberInputProps.onChange(e);
-    }
   };
 
   handleCardNumberKeyPress = (e: any) => {
@@ -218,11 +209,6 @@ class CreditCardInput extends Component<Props, State> {
     const expiryError = isExpiryInvalid(cardExpiry);
     if (expiryError) {
       this.setFieldInvalid(expiryError);
-    }
-
-    const { cardExpiryInputProps } = this.props;
-    if (cardExpiryInputProps.onBlur) {
-      cardExpiryInputProps.onBlur(e);
     }
   };
 
@@ -245,11 +231,6 @@ class CreditCardInput extends Component<Props, State> {
         }
       }
     }
-
-    const { cardExpiryInputProps } = this.props;
-    if (cardExpiryInputProps.onChange) {
-      cardExpiryInputProps.onChange(e);
-    }
   };
 
   handleCardExpiryKeyPress = (e: any) => {
@@ -267,11 +248,6 @@ class CreditCardInput extends Component<Props, State> {
     if (!payment.fns.validateCardCVC(e.target.value)) {
       this.setFieldInvalid('CVC is invalid');
     }
-
-    const { cardCVCInputProps } = this.props;
-    if (cardCVCInputProps.onBlur) {
-      cardCVCInputProps.onBlur(e);
-    }
   };
 
   handleCVCChange = (e: SyntheticInputEvent<*>) => {
@@ -284,11 +260,6 @@ class CreditCardInput extends Component<Props, State> {
       if (!payment.fns.validateCardCVC(CVC, cardType)) {
         this.setFieldInvalid('CVC is invalid');
       }
-    }
-
-    const { cardCVCInputProps } = this.props;
-    if (cardCVCInputProps.onChange) {
-      cardCVCInputProps.onChange(e);
     }
   };
 
@@ -333,18 +304,17 @@ class CreditCardInput extends Component<Props, State> {
   render = () => {
     const { cardImage, errorText } = this.state;
     const {
-      cardExpiryInputProps,
-      cardNumberInputProps,
-      cardCVCInputProps,
       cardImageClassName,
       cardImageStyle,
+      cardCVCInputRenderer,
+      cardExpiryInputRenderer,
+      cardNumberInputRenderer,
       containerClassName,
       containerStyle,
       dangerTextClassName,
       dangerTextStyle,
       fieldClassName,
       fieldStyle,
-      inputComponent: Input,
       inputClassName,
       inputStyle,
       invalidStyle
@@ -366,72 +336,56 @@ class CreditCardInput extends Component<Props, State> {
             inputStyled={inputStyle}
             data-max="9999 9999 9999 9999 9999"
           >
-            <Input
-              withRef
-              id="card-number"
-              innerRef={cardNumberField => {
+            {cardNumberInputRenderer({
+              id: 'card-number',
+              ref: cardNumberField => {
                 this.cardNumberField = cardNumberField;
-              }}
-              ref={cardNumberField => {
-                this.cardNumberField = cardNumberField;
-              }}
-              autoComplete="cc-number"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="\d*"
-              placeholder="Card number"
-              type="text"
-              component="input"
-              {...cardNumberInputProps}
-              onBlur={this.handleCardNumberBlur}
-              onChange={this.handleCardNumberChange}
-              onKeyPress={this.handleCardNumberKeyPress}
-            />
+              },
+              autoComplete: 'cc-number',
+              className: `credit-card-input ${inputClassName}`,
+              onBlur: this.handleCardNumberBlur,
+              onChange: this.handleCardNumberChange,
+              onKeyPress: this.handleCardNumberKeyPress,
+              pattern: `\d*`,
+              placeholder: 'Card number',
+              type: 'text'
+            })}
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
-            <Input
-              withRef
-              id="card-expiry"
-              innerRef={cardExpiryField => {
+            {cardExpiryInputRenderer({
+              id: 'card-expiry',
+              ref: cardExpiryField => {
                 this.cardExpiryField = cardExpiryField;
-              }}
-              ref={cardExpiryField => {
-                this.cardExpiryField = cardExpiryField;
-              }}
-              autoComplete="cc-exp"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="\d*"
-              placeholder="MM / YY"
-              type="text"
-              component="input"
-              {...cardExpiryInputProps}
-              onBlur={this.handleCardExpiryBlur}
-              onChange={this.handleCardExpiryChange}
-              onKeyDown={this.handleKeyDown(this.cardNumberField)}
-              onKeyPress={this.handleCardExpiryKeyPress}
-            />
+              },
+              autoComplete: 'cc-exp',
+              className: `credit-card-input ${inputClassName}`,
+              pattern: `\d*`,
+              placeholder: 'MM / YY',
+              type: 'text',
+              component: 'input',
+              onBlur: this.handleCardExpiryBlur,
+              onChange: this.handleCardExpiryChange,
+              onKeyDown: this.handleKeyDown(this.cardNumberField),
+              onKeyPress: this.handleCardExpiryKeyPress
+            })}
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="9999">
-            <Input
-              withRef
-              id="cvc"
-              innerRef={cvcField => {
+            {cardCVCInputRenderer({
+              id: 'cvc',
+              ref: cvcField => {
                 this.cvcField = cvcField;
-              }}
-              ref={cvcField => {
-                this.cvcField = cvcField;
-              }}
-              autoComplete="off"
-              className={`credit-card-input ${inputClassName}`}
-              pattern="\d*"
-              placeholder="CVC"
-              type="text"
-              component="input"
-              {...cardCVCInputProps}
-              onBlur={this.handleCVCBlur}
-              onChange={this.handleCVCChange}
-              onKeyDown={this.handleKeyDown(this.cardExpiryField)}
-              onKeyPress={this.handleCardCVCKeyPress}
-            />
+              },
+              autoComplete: 'off',
+              className: `credit-card-input ${inputClassName}`,
+              pattern: `\d*`,
+              placeholder: 'CVC',
+              type: 'text',
+              component: 'input',
+              onBlur: this.handleCVCBlur,
+              onChange: this.handleCVCChange,
+              onKeyDown: this.handleKeyDown(this.cardExpiryField),
+              onKeyPress: this.handleCardCVCKeyPress
+            })}
           </InputWrapper>
         </FieldWrapper>
         {errorText && (
