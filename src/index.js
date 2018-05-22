@@ -5,6 +5,13 @@ import payment from 'payment';
 import creditCardType from 'credit-card-type';
 import styled from 'styled-components';
 
+import {
+  formatExpiry,
+  formatCardNumber,
+  hasCardNumberReachedMaxLength,
+  hasCVCReachedMaxLength,
+  isHighlighted
+} from './utils/formatter';
 import images from './utils/images';
 import isExpiryInvalid from './utils/is-expiry-invalid';
 
@@ -135,6 +142,12 @@ class CreditCardInput extends Component<Props, State> {
     });
   };
 
+  checkIsNumeric = (e: any) => {
+    if (!/^\d*$/.test(e.key)) {
+      e.preventDefault();
+    }
+  };
+
   handleCardNumberBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardNumber(e.target.value)) {
       this.setFieldInvalid('Card number is invalid');
@@ -154,12 +167,13 @@ class CreditCardInput extends Component<Props, State> {
       creditCardType.getTypeInfo(creditCardType.types[CARD_TYPES[cardType]]) ||
       {};
     const cardTypeLengths = cardTypeInfo.lengths || [16];
+
+    this.cardNumberField.value = formatCardNumber(cardNumber);
+
     this.setState({
       cardImage: images[cardType] || images.placeholder,
       cardNumber
     });
-
-    payment.formatCardNumber(document.getElementById('card-number'));
 
     this.setFieldValid();
     if (cardTypeLengths) {
@@ -188,6 +202,17 @@ class CreditCardInput extends Component<Props, State> {
     }
   };
 
+  handleCardNumberKeyPress = (e: any) => {
+    const value = e.target.value;
+    this.checkIsNumeric(e);
+    if (value && !isHighlighted()) {
+      const valueLength = value.split(' ').join('').length;
+      if (hasCardNumberReachedMaxLength(value, valueLength)) {
+        e.preventDefault();
+      }
+    }
+  };
+
   handleCardExpiryBlur = (e: SyntheticInputEvent<*>) => {
     const cardExpiry = e.target.value.split(' / ').join('/');
     const expiryError = isExpiryInvalid(cardExpiry);
@@ -203,7 +228,8 @@ class CreditCardInput extends Component<Props, State> {
 
   handleCardExpiryChange = (e: SyntheticInputEvent<*>) => {
     const cardExpiry = e.target.value.split(' / ').join('/');
-    payment.formatCardExpiry(document.getElementById('card-expiry'));
+
+    this.cardExpiryField.value = formatExpiry(cardExpiry);
 
     this.setFieldValid();
 
@@ -226,6 +252,17 @@ class CreditCardInput extends Component<Props, State> {
     }
   };
 
+  handleCardExpiryKeyPress = (e: any) => {
+    const value = e.target.value;
+    this.checkIsNumeric(e);
+    if (value && !isHighlighted()) {
+      const valueLength = value.split(' / ').join('').length;
+      if (valueLength >= 4) {
+        e.preventDefault();
+      }
+    }
+  };
+
   handleCVCBlur = (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardCVC(e.target.value)) {
       this.setFieldInvalid('CVC is invalid');
@@ -240,11 +277,10 @@ class CreditCardInput extends Component<Props, State> {
   handleCVCChange = (e: SyntheticInputEvent<*>) => {
     const CVC = e.target.value;
     const CVCLength = CVC.length;
-    payment.formatCardCVC(document.getElementById('cvc'));
+    const cardType = payment.fns.cardType(this.state.cardNumber);
 
     this.setFieldValid();
     if (CVCLength >= 4) {
-      const cardType = payment.fns.cardType(this.state.cardNumber);
       if (!payment.fns.validateCardCVC(CVC, cardType)) {
         this.setFieldInvalid('CVC is invalid');
       }
@@ -253,6 +289,18 @@ class CreditCardInput extends Component<Props, State> {
     const { cardCVCInputProps } = this.props;
     if (cardCVCInputProps.onChange) {
       cardCVCInputProps.onChange(e);
+    }
+  };
+
+  handleCardCVCKeyPress = (e: any) => {
+    const cardType = payment.fns.cardType(this.state.cardNumber);
+    const value = e.target.value;
+    this.checkIsNumeric(e);
+    if (value && !isHighlighted()) {
+      const valueLength = value.split(' / ').join('').length;
+      if (hasCVCReachedMaxLength(cardType, valueLength)) {
+        e.preventDefault();
+      }
     }
   };
 
@@ -321,30 +369,37 @@ class CreditCardInput extends Component<Props, State> {
             <Input
               withRef
               id="card-number"
+              innerRef={cardNumberField => {
+                this.cardNumberField = cardNumberField;
+              }}
               ref={cardNumberField => {
                 this.cardNumberField = cardNumberField;
               }}
               autoComplete="cc-number"
               className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
+              pattern="\d*"
               placeholder="Card number"
               type="text"
               component="input"
               {...cardNumberInputProps}
               onBlur={this.handleCardNumberBlur}
               onChange={this.handleCardNumberChange}
+              onKeyPress={this.handleCardNumberKeyPress}
             />
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
             <Input
               withRef
               id="card-expiry"
+              innerRef={cardExpiryField => {
+                this.cardExpiryField = cardExpiryField;
+              }}
               ref={cardExpiryField => {
                 this.cardExpiryField = cardExpiryField;
               }}
               autoComplete="cc-exp"
               className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
+              pattern="\d*"
               placeholder="MM / YY"
               type="text"
               component="input"
@@ -352,18 +407,22 @@ class CreditCardInput extends Component<Props, State> {
               onBlur={this.handleCardExpiryBlur}
               onChange={this.handleCardExpiryChange}
               onKeyDown={this.handleKeyDown(this.cardNumberField)}
+              onKeyPress={this.handleCardExpiryKeyPress}
             />
           </InputWrapper>
           <InputWrapper inputStyled={inputStyle} data-max="9999">
             <Input
               withRef
               id="cvc"
+              innerRef={cvcField => {
+                this.cvcField = cvcField;
+              }}
               ref={cvcField => {
                 this.cvcField = cvcField;
               }}
-              autoComplete="cc-csc"
+              autoComplete="off"
               className={`credit-card-input ${inputClassName}`}
-              pattern="[0-9]*"
+              pattern="\d*"
               placeholder="CVC"
               type="text"
               component="input"
@@ -371,6 +430,7 @@ class CreditCardInput extends Component<Props, State> {
               onBlur={this.handleCVCBlur}
               onChange={this.handleCVCChange}
               onKeyDown={this.handleKeyDown(this.cardExpiryField)}
+              onKeyPress={this.handleCardCVCKeyPress}
             />
           </InputWrapper>
         </FieldWrapper>
