@@ -354,7 +354,7 @@ class CreditCardInput extends Component<Props, State> {
               onKeyDown={this.handleKeyDown(this.cardNumberField)}
             />
           </InputWrapper>
-          <InputWrapper inputStyled={inputStyle} data-max="999999">
+          <InputWrapper inputStyled={inputStyle} data-max="9999">
             <Input
               withRef
               id="cvc"
