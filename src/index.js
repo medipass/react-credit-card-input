@@ -103,7 +103,7 @@ type State = {
   errorText: ?string
 };
 
-const inputRenderer = (props: Object) => <input {...props} />;
+const inputRenderer = ({ props }: Object) => <input {...props} />;
 
 class CreditCardInput extends Component<Props, State> {
   cardExpiryField: any;
