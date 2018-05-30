@@ -284,7 +284,7 @@ class CreditCardInput extends Component<Props, State> {
     }
 
     const { cardCVCInputProps } = this.props;
-    cardCVCInputProps && cardCVCInputProps.onBlur(e);
+    cardCVCInputProps.onBlur && cardCVCInputProps.onBlur(e);
     onBlur && onBlur(e);
   };
 
