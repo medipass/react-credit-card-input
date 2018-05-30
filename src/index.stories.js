@@ -17,29 +17,33 @@ storiesOf('CreditCardInput', module)
   .add('default', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} />}
-        cardExpiryInputRenderer={props => <input {...props} />}
-        cardNumberInputRenderer={props => <input {...props} />}
+        cardCVCInputProps={{
+          onBlur: e => console.log('cvc blur', e),
+          onChange: e => console.log('cvc change', e)
+        }}
+        cardExpiryInputProps={{
+          onBlur: e => console.log('expiry blur', e),
+          onChange: e => console.log('expiry change', e)
+        }}
+        cardNumberInputProps={{
+          onBlur: e => console.log('number blur', e),
+          onChange: e => console.log('number change', e)
+        }}
       />
     </Container>
   ))
   .add('with pre-filled values', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} value="100" />}
-        cardExpiryInputRenderer={props => <input {...props} value="05 / 21" />}
-        cardNumberInputRenderer={props => (
-          <input {...props} value="4242 4242 4242 4242" />
-        )}
+        cardCVCInputProps={{ value: '123' }}
+        cardExpiryInputProps={{ value: '05 / 21' }}
+        cardNumberInputProps={{ value: '4242 4242 4242 4242' }}
       />
     </Container>
   ))
   .add('custom styling (container)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} />}
-        cardExpiryInputRenderer={props => <input {...props} />}
-        cardNumberInputRenderer={props => <input {...props} />}
         containerClassName="custom-container"
         containerStyle={{
           backgroundColor: 'gray',
@@ -52,9 +56,6 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (field wrapper)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} />}
-        cardExpiryInputRenderer={props => <input {...props} />}
-        cardNumberInputRenderer={props => <input {...props} />}
         fieldClassName="custom-field"
         fieldStyle={{ padding: '20px', color: 'gray' }}
         invalidClassName="is-invalid-custom"
@@ -65,9 +66,6 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (input)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} />}
-        cardExpiryInputRenderer={props => <input {...props} />}
-        cardNumberInputRenderer={props => <input {...props} />}
         inputClassName="custom-input"
         inputStyle={{ color: 'red' }}
       />
@@ -76,12 +74,37 @@ storiesOf('CreditCardInput', module)
   .add('custom styling (danger text)', () => (
     <Container style={{ backgroundColor: '#f0f0f0' }}>
       <CreditCardInput
-        cardCVCInputRenderer={props => <input {...props} />}
-        cardExpiryInputRenderer={props => <input {...props} />}
-        cardNumberInputRenderer={props => <input {...props} />}
         dangerTextClassName="custom-danger-text"
         dangerTextStyle={{ color: 'green' }}
         invalidStyle={{ border: '1px solid green' }}
+      />
+    </Container>
+  ))
+  .add('custom renderers', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput
+        cardCVCInputRenderer={({ handleCardCVCChange, props }) => (
+          <input
+            {...props}
+            onChange={handleCardCVCChange(e => console.log('cvc change', e))}
+          />
+        )}
+        cardExpiryInputRenderer={({ handleCardExpiryChange, props }) => (
+          <input
+            {...props}
+            onChange={handleCardExpiryChange(e =>
+              console.log('expiry change', e)
+            )}
+          />
+        )}
+        cardNumberInputRenderer={({ handleCardNumberChange, props }) => (
+          <input
+            {...props}
+            onChange={handleCardNumberChange(e =>
+              console.log('number change', e)
+            )}
+          />
+        )}
       />
     </Container>
   ));

@@ -37,6 +37,9 @@ import CreditCardInput from 'react-credit-card-input';
   <tr><td>  cardNumberInputProps </td><td>object (optional)</td><td>{}</td> <td>Card number input element props<br/>(e.g. { value: cardNumber, onChange: this.handleCardNumberChange, onBlur: this.handleCardNumberBlur })</td></tr>
   <tr><td>  cardExpiryInputProps </td><td>object (optional)</td><td>{}</td> <td>Card expiry date input element props<br/>(e.g. { value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur })</td></tr>
   <tr><td>  cardCVCInputProps </td><td>object (optional)</td><td>{}</td> <td>Card CVC input element props<br/>(e.g. { value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur })</td></tr>
+  <tr><td>  cardNumberInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card number input renderer</td></tr>
+  <tr><td>  cardExpiryInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card expiry date input renderer</td></tr>
+  <tr><td>  cardCVCInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card CVC input renderer</tr>
   <tr><td colspan="4"></tr>
   <tr><td>  cardImageClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the card type image</td></tr>
   <tr><td>  cardImageStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the card type image</td></tr>
@@ -55,24 +58,20 @@ import CreditCardInput from 'react-credit-card-input';
 </tbody>
 </table>
 
-## Integrating with form libraries
+### Input renderer props
 
-### redux-form usage
-
-Note: this is using redux-form v6!
-
-```js
-import { Field } from 'redux-form'
-import CreditCardInput from 'react-credit-card-input';
-
-<CreditCardInput
-  fieldClassName="input"
-  inputComponent={Field}
-  cardNumberInputProps={{ name: 'cardNumber' }}
-  cardExpiryInputProps={{ name: 'expiryDate' }}
-  cardCVCInputProps={{ name: 'cvc' }}
-/>
-```
+<table>
+<thead><tr><th>Prop</th><th>Type</th><th>Description</th></tr></thead>
+<tbody>
+  <tr><td>  handleCardNumberChange </td><td>Function</td> <td>Handle card number change.</td></tr>
+  <tr><td>  handleCardNumberBlur </td><td>Function</td> <td>Handle card number blur.</td></tr>
+  <tr><td>  handleCardExpiryChange </td><td>Function</td> <td>Handle card expiry change.</td></tr>
+  <tr><td>  handleCardExpiryBlur </td><td>Function</td> <td>Handle card expiry blur.</td></tr>
+  <tr><td>  handleCardCVCChange </td><td>Function</td> <td>Handle card CVC change.</td></tr>
+  <tr><td>  handleCardCVCBlur </td><td>Function</td> <td>Handle card CVC blur.</td></tr>
+  <tr><td>  props </td><td>Object</td> <td>Input component props</td></tr>
+</tbody>
+</table>
 
 ## Contributing
 
@@ -86,12 +85,12 @@ Contributing to `react-credit-card-input` is easy! With four simple steps:
 1. `npm install` to install the project's dependencies
 1. `git checkout -b the-name-of-my-branch` to create a branch (use something short and comprehensible, such as: `fix-card-number-issue`).
 1. `git remote add upstream https://github.com/medipass/react-credit-card-input.git` and `git pull upstream master` to update your fork from this source.
-  
+
 ### Make the change
 
 Note: You can run `npm run storybook`, and then navigate to http://localhost:9001/ to interactively develop your changes. If you are developing a new feature, make sure to add a story for it!
 
-### Test the change 
+### Test the change
 1. Run `npm run fix` from the project root (This will run Prettier and ESLint and automatically fix any issues).
 
 ### Push the change!
