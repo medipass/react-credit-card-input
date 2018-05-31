@@ -405,7 +405,7 @@ class CreditCardInput extends Component<Props, State> {
               }
             })}
           </InputWrapper>
-          <InputWrapper inputStyled={inputStyle} data-max="MM / YY 99">
+          <InputWrapper inputStyled={inputStyle} data-max="MM / YY 9">
             {cardExpiryInputRenderer({
               handleCardExpiryChange: onChange =>
                 this.handleCardExpiryChange({ onChange }),
@@ -419,7 +419,7 @@ class CreditCardInput extends Component<Props, State> {
                 autoComplete: 'cc-exp',
                 className: `credit-card-input ${inputClassName}`,
                 pattern: `\d*`,
-                placeholder: 'MM / YY',
+                placeholder: 'MM/YY',
                 type: 'text',
                 component: 'input',
                 ...cardExpiryInputProps,
@@ -430,7 +430,7 @@ class CreditCardInput extends Component<Props, State> {
               }
             })}
           </InputWrapper>
-          <InputWrapper inputStyled={inputStyle} data-max="9999">
+          <InputWrapper inputStyled={inputStyle} data-max="99999">
             {cardCVCInputRenderer({
               handleCardCVCChange: onChange =>
                 this.handleCardCVCChange({ onChange }),
