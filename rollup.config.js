@@ -11,7 +11,8 @@ export default {
       'react-dom': 'ReactDOM',
       payment: 'payment',
       'credit-card-type': 'creditCardType',
-      'styled-components': 'styled'
+      'styled-components': 'styled',
+      'is-valid-zip': 'isValidZip'
     }
   },
   external: [
@@ -19,7 +20,8 @@ export default {
     'react-dom',
     'credit-card-type',
     'payment',
-    'styled-components'
+    'styled-components',
+    'is-valid-zip'
   ],
   plugins: [
     babel({
