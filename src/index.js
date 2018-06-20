@@ -4,12 +4,14 @@ import React, { Component } from 'react';
 import payment from 'payment';
 import creditCardType from 'credit-card-type';
 import styled from 'styled-components';
+import isValidZip from 'is-valid-zip';
 
 import {
-  formatExpiry,
   formatCardNumber,
+  formatExpiry,
   hasCardNumberReachedMaxLength,
   hasCVCReachedMaxLength,
+  hasZipReachedMaxLength,
   isHighlighted
 } from './utils/formatter';
 import images from './utils/images';
@@ -26,6 +28,7 @@ const FieldWrapper = styled.div`
   background-color: white;
   padding: 10px;
   border-radius: 3px;
+  overflow: hidden;
   ${({ styled }) => ({ ...styled })};
 
   &.is-invalid {
@@ -42,6 +45,10 @@ const InputWrapper = styled.label`
   margin-left: 0.5em;
   display: flex;
   align-items: center;
+  transition: transform 0.5s;
+  transform: translateX(
+    ${({ translateXForZip }) => (translateXForZip ? '0' : '4rem')}
+  );
 
   &::after {
     content: attr(data-max);
@@ -79,9 +86,11 @@ type Props = {
   cardCVCInputRenderer: Function,
   cardExpiryInputRenderer: Function,
   cardNumberInputRenderer: Function,
+  cardZipInputRenderer: Function,
   cardExpiryInputProps: Object,
   cardNumberInputProps: Object,
   cardCVCInputProps: Object,
+  cardZipInputProps: Object,
   cardImageClassName: string,
   cardImageStyle: Object,
   containerClassName: string,
@@ -90,6 +99,7 @@ type Props = {
   dangerTextStyle: Object,
   fieldClassName: string,
   fieldStyle: Object,
+  enableZipInput: boolean,
   inputComponent: Function | Object | string,
   inputClassName: string,
   inputStyle: Object,
@@ -100,7 +110,8 @@ type State = {
   cardImage: string,
   cardNumberLength: number,
   cardNumber: ?string,
-  errorText: ?string
+  errorText: ?string,
+  showZip: boolean
 };
 
 const inputRenderer = ({ props }: Object) => <input {...props} />;
@@ -109,20 +120,24 @@ class CreditCardInput extends Component<Props, State> {
   cardExpiryField: any;
   cardNumberField: any;
   cvcField: any;
+  zipField: any;
 
   static defaultProps = {
     cardCVCInputRenderer: inputRenderer,
     cardExpiryInputRenderer: inputRenderer,
     cardNumberInputRenderer: inputRenderer,
+    cardZipInputRenderer: inputRenderer,
     cardExpiryInputProps: {},
     cardNumberInputProps: {},
     cardCVCInputProps: {},
+    cardZipInputProps: {},
     cardImageClassName: '',
     cardImageStyle: {},
     containerClassName: '',
     containerStyle: {},
     dangerTextClassName: '',
     dangerTextStyle: {},
+    enableZipInput: false,
     fieldClassName: '',
     fieldStyle: {},
     inputComponent: 'input',
@@ -138,7 +153,8 @@ class CreditCardInput extends Component<Props, State> {
       cardImage: images.placeholder,
       cardNumberLength: 0,
       cardNumber: null,
-      errorText: null
+      errorText: null,
+      showZip: false
     };
   }
 
@@ -186,6 +202,8 @@ class CreditCardInput extends Component<Props, State> {
       cardImage: images[cardType] || images.placeholder,
       cardNumber
     });
+
+    this.setState({ showZip: cardNumberLength >= 6 });
 
     this.setFieldValid();
     if (cardTypeLengths) {
@@ -293,12 +311,21 @@ class CreditCardInput extends Component<Props, State> {
   ) => (e: SyntheticInputEvent<*>) => {
     const CVC = e.target.value;
     const CVCLength = CVC.length;
+    const isZipFieldAvailable = this.props.enableZipInput && this.state.showZip;
     const cardType = payment.fns.cardType(this.state.cardNumber);
 
     this.setFieldValid();
     if (CVCLength >= 4) {
       if (!payment.fns.validateCardCVC(CVC, cardType)) {
         this.setFieldInvalid('CVC is invalid');
+      }
+    }
+
+    if (isZipFieldAvailable && hasCVCReachedMaxLength(cardType, CVCLength)) {
+      if (this.zipField.getRenderedComponent) {
+        this.zipField.getRenderedComponent().focus();
+      } else {
+        this.zipField.focus();
       }
     }
 
@@ -314,6 +341,47 @@ class CreditCardInput extends Component<Props, State> {
     if (value && !isHighlighted()) {
       const valueLength = value.split(' / ').join('').length;
       if (hasCVCReachedMaxLength(cardType, valueLength)) {
+        e.preventDefault();
+      }
+    }
+  };
+
+  handleCardZipBlur = (
+    { onBlur }: { onBlur?: ?Function } = { onBlur: null }
+  ) => (e: SyntheticInputEvent<*>) => {
+    if (!isValidZip(e.target.value)) {
+      this.setFieldInvalid('Zip code is invalid');
+    }
+
+    const { cardZipInputProps } = this.props;
+    cardZipInputProps.onBlur && cardZipInputProps.onBlur(e);
+    onBlur && onBlur(e);
+  };
+
+  handleCardZipChange = (
+    { onChange }: { onChange?: ?Function } = { onChange: null }
+  ) => (e: SyntheticInputEvent<*>) => {
+    const zip = e.target.value;
+    const zipLength = zip.length;
+
+    this.setFieldValid();
+
+    if (zipLength >= 5 && !isValidZip(zip)) {
+      this.setFieldInvalid('Zip code is invalid');
+    }
+
+    const { cardZipInputProps } = this.props;
+    cardZipInputProps.onChange && cardZipInputProps.onChange(e);
+    onChange && onChange(e);
+  };
+
+  handleCardZipKeyPress = (e: any) => {
+    const cardType = payment.fns.cardType(this.state.cardNumber);
+    const value = e.target.value;
+    this.checkIsNumeric(e);
+    if (value && !isHighlighted()) {
+      const valueLength = value.split(' / ').join('').length;
+      if (hasZipReachedMaxLength(cardType, valueLength)) {
         e.preventDefault();
       }
     }
@@ -346,26 +414,31 @@ class CreditCardInput extends Component<Props, State> {
   };
 
   render = () => {
-    const { cardImage, errorText } = this.state;
+    const { cardImage, errorText, showZip } = this.state;
     const {
       cardImageClassName,
       cardImageStyle,
       cardCVCInputProps,
+      cardZipInputProps,
       cardExpiryInputProps,
       cardNumberInputProps,
       cardCVCInputRenderer,
       cardExpiryInputRenderer,
       cardNumberInputRenderer,
+      cardZipInputRenderer,
       containerClassName,
       containerStyle,
       dangerTextClassName,
       dangerTextStyle,
+      enableZipInput,
       fieldClassName,
       fieldStyle,
       inputClassName,
       inputStyle,
       invalidStyle
     } = this.props;
+    const isZipEnabled = enableZipInput && showZip;
+
     return (
       <Container className={containerClassName} styled={containerStyle}>
         <FieldWrapper
@@ -382,6 +455,7 @@ class CreditCardInput extends Component<Props, State> {
           <InputWrapper
             inputStyled={inputStyle}
             data-max="9999 9999 9999 9999 9999"
+            translateXForZip={true}
           >
             {cardNumberInputRenderer({
               handleCardNumberChange: onChange =>
@@ -405,7 +479,11 @@ class CreditCardInput extends Component<Props, State> {
               }
             })}
           </InputWrapper>
-          <InputWrapper inputStyled={inputStyle} data-max="MM / YY 9">
+          <InputWrapper
+            inputStyled={inputStyle}
+            data-max="MM / YY 9"
+            translateXForZip={isZipEnabled}
+          >
             {cardExpiryInputRenderer({
               handleCardExpiryChange: onChange =>
                 this.handleCardExpiryChange({ onChange }),
@@ -430,7 +508,11 @@ class CreditCardInput extends Component<Props, State> {
               }
             })}
           </InputWrapper>
-          <InputWrapper inputStyled={inputStyle} data-max="99999">
+          <InputWrapper
+            inputStyled={inputStyle}
+            data-max="99999"
+            translateXForZip={isZipEnabled}
+          >
             {cardCVCInputRenderer({
               handleCardCVCChange: onChange =>
                 this.handleCardCVCChange({ onChange }),
@@ -451,6 +533,30 @@ class CreditCardInput extends Component<Props, State> {
                 onChange: this.handleCardCVCChange(),
                 onKeyDown: this.handleKeyDown(this.cardExpiryField),
                 onKeyPress: this.handleCardCVCKeyPress
+              }
+            })}
+          </InputWrapper>
+          <InputWrapper data-max="999999" translateXForZip={isZipEnabled}>
+            {cardZipInputRenderer({
+              handleCardZipChange: onChange =>
+                this.handleCardZipChange({ onChange }),
+              handleCardZipBlur: onBlur => this.handleCardZipBlur({ onBlur }),
+              props: {
+                id: 'zip',
+                ref: zipField => {
+                  this.zipField = zipField;
+                },
+                autoComplete: 'off',
+                className: `credit-card-input ${inputClassName}`,
+                pattern: `\d*`,
+                placeholder: 'Zip',
+                type: 'text',
+                component: 'input',
+                ...cardZipInputProps,
+                onBlur: this.handleCardZipBlur(),
+                onChange: this.handleCardZipChange(),
+                onKeyDown: this.handleKeyDown(this.cvcField),
+                onKeyPress: this.handleCardZipKeyPress
               }
             })}
           </InputWrapper>

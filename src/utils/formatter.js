@@ -1,4 +1,5 @@
 export const DEFAULT_CVC_LENGTH = 3;
+export const DEFAULT_ZIP_LENGTH = 5;
 export const DEFAULT_CARD_FORMAT = /(\d{1,4})/g;
 export const CARD_TYPES = [
   {
@@ -113,7 +114,8 @@ export const hasCVCReachedMaxLength = (type, currentValueLength) => {
   }
   return currentValueLength >= cardType.cvcLength;
 };
-
+export const hasZipReachedMaxLength = (type, currentValueLength) =>
+  currentValueLength >= DEFAULT_ZIP_LENGTH;
 export const formatCardNumber = cardNumber => {
   const cardType = getCardTypeByValue(cardNumber);
   if (!cardType) return cardNumber;
