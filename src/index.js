@@ -67,6 +67,10 @@ const InputWrapper = styled.label`
       outline: 0px;
     }
   }
+
+  & .zip-input {
+    display: ${({ translateXForZip }) => (translateXForZip ? 'flex' : 'none')};
+  }
 `;
 const DangerText = styled.p`
   font-size: 0.8rem;
@@ -547,7 +551,7 @@ class CreditCardInput extends Component<Props, State> {
                   this.zipField = zipField;
                 },
                 autoComplete: 'off',
-                className: `credit-card-input ${inputClassName}`,
+                className: `credit-card-input zip-input ${inputClassName}`,
                 pattern: `\d*`,
                 placeholder: 'Zip',
                 type: 'text',
