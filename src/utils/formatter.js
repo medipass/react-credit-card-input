@@ -132,6 +132,21 @@ export const formatCardNumber = cardNumber => {
   }
   return cardNumber;
 };
-export const formatExpiry = expiry =>
-  expiry && expiry.match(/(\d{1,2})/g).join(' / ');
+export const formatExpiry = prevExpiry => {
+  if (!prevExpiry) return null;
+  let expiry = prevExpiry;
+  if (/^[2-9]$/.test(expiry)) {
+    expiry = `0${expiry}`;
+  }
+  expiry = expiry.match(/(\d{1,2})/g);
+  if (expiry.length === 1) {
+    if (prevExpiry.includes('/')) {
+      return expiry[0];
+    }
+    if (/\d{2}/.test(expiry)) {
+      return `${expiry[0]} / `;
+    }
+  }
+  return expiry.join(' / ');
+};
 export const isHighlighted = () => window.getSelection().type === 'Range';
