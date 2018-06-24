@@ -213,11 +213,7 @@ class CreditCardInput extends Component<Props, State> {
           length === cardNumberLength &&
           payment.fns.validateCardNumber(cardNumber)
         ) {
-          if (this.cardExpiryField.getRenderedComponent) {
-            this.cardExpiryField.getRenderedComponent().focus();
-          } else {
-            this.cardExpiryField.focus();
-          }
+          this.cardExpiryField.focus();
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
@@ -270,11 +266,7 @@ class CreditCardInput extends Component<Props, State> {
       if (expiryError) {
         this.setFieldInvalid(expiryError);
       } else {
-        if (this.cvcField.getRenderedComponent) {
-          this.cvcField.getRenderedComponent().focus();
-        } else {
-          this.cvcField.focus();
-        }
+        this.cvcField.focus();
       }
     }
 
@@ -322,11 +314,7 @@ class CreditCardInput extends Component<Props, State> {
     }
 
     if (isZipFieldAvailable && hasCVCReachedMaxLength(cardType, CVCLength)) {
-      if (this.zipField.getRenderedComponent) {
-        this.zipField.getRenderedComponent().focus();
-      } else {
-        this.zipField.focus();
-      }
+      this.zipField.focus();
     }
 
     const { cardCVCInputProps } = this.props;
@@ -390,11 +378,7 @@ class CreditCardInput extends Component<Props, State> {
   handleKeyDown = (ref: any) => {
     return (e: SyntheticInputEvent<*>) => {
       if (e.keyCode === BACKSPACE_KEY_CODE && !e.target.value) {
-        if (ref.getRenderedComponent) {
-          ref.getRenderedComponent().focus();
-        } else {
-          ref.focus();
-        }
+        ref.focus();
       }
     };
   };
@@ -499,7 +483,6 @@ class CreditCardInput extends Component<Props, State> {
                 pattern: '[0-9]*',
                 placeholder: 'MM/YY',
                 type: 'text',
-                component: 'input',
                 ...cardExpiryInputProps,
                 onBlur: this.handleCardExpiryBlur(),
                 onChange: this.handleCardExpiryChange(),
@@ -527,7 +510,6 @@ class CreditCardInput extends Component<Props, State> {
                 pattern: '[0-9]*',
                 placeholder: 'CVC',
                 type: 'text',
-                component: 'input',
                 ...cardCVCInputProps,
                 onBlur: this.handleCardCVCBlur(),
                 onChange: this.handleCardCVCChange(),
@@ -546,12 +528,10 @@ class CreditCardInput extends Component<Props, State> {
                 ref: zipField => {
                   this.zipField = zipField;
                 },
-                autoComplete: 'off',
                 className: `credit-card-input ${inputClassName}`,
-                pattern: `\d*`,
+                pattern: '[0-9]*',
                 placeholder: 'Zip',
                 type: 'text',
-                component: 'input',
                 ...cardZipInputProps,
                 onBlur: this.handleCardZipBlur(),
                 onChange: this.handleCardZipChange(),
