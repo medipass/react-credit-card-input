@@ -41,14 +41,12 @@ const CardImage = styled.img`
   ${({ styled }) => ({ ...styled })};
 `;
 const InputWrapper = styled.label`
-  position: relative;
-  margin-left: 0.5em;
-  display: flex;
   align-items: center;
+  display: ${props => (props.isActive ? 'flex' : 'none')};
+  margin-left: 0.5em;
+  position: relative;
   transition: transform 0.5s;
-  transform: translateX(
-    ${({ translateXForZip }) => (translateXForZip ? '0' : '4rem')}
-  );
+  transform: translateX(${props => (props.translateX ? '4rem' : '0')});
 
   &::after {
     content: attr(data-max);
@@ -69,7 +67,7 @@ const InputWrapper = styled.label`
   }
 
   & .zip-input {
-    display: ${({ translateXForZip }) => (translateXForZip ? 'flex' : 'none')};
+    display: ${props => (props.isZipActive ? 'flex' : 'none')};
   }
 `;
 const DangerText = styled.p`
@@ -192,6 +190,7 @@ class CreditCardInput extends Component<Props, State> {
   handleCardNumberChange = (
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { enableZipInput } = this.props;
     const cardNumber = e.target.value;
     const cardNumberLength = cardNumber.split(' ').join('').length;
     const cardType = payment.fns.cardType(cardNumber);
@@ -207,7 +206,9 @@ class CreditCardInput extends Component<Props, State> {
       cardNumber
     });
 
-    this.setState({ showZip: cardNumberLength >= 6 });
+    if (enableZipInput) {
+      this.setState({ showZip: cardNumberLength >= 6 });
+    }
 
     this.setFieldValid();
     if (cardTypeLengths) {
@@ -425,7 +426,6 @@ class CreditCardInput extends Component<Props, State> {
       inputStyle,
       invalidStyle
     } = this.props;
-    const isZipEnabled = enableZipInput && showZip;
 
     return (
       <Container className={containerClassName} styled={containerStyle}>
@@ -442,8 +442,9 @@ class CreditCardInput extends Component<Props, State> {
           />
           <InputWrapper
             inputStyled={inputStyle}
+            isActive
+            translateX={false}
             data-max="9999 9999 9999 9999 9999"
-            translateXForZip={true}
           >
             {cardNumberInputRenderer({
               handleCardNumberChange: onChange =>
@@ -469,8 +470,9 @@ class CreditCardInput extends Component<Props, State> {
           </InputWrapper>
           <InputWrapper
             inputStyled={inputStyle}
+            isActive
             data-max="MM / YY 9"
-            translateXForZip={isZipEnabled}
+            translateX={enableZipInput && !showZip}
           >
             {cardExpiryInputRenderer({
               handleCardExpiryChange: onChange =>
@@ -497,8 +499,9 @@ class CreditCardInput extends Component<Props, State> {
           </InputWrapper>
           <InputWrapper
             inputStyled={inputStyle}
+            isActive
             data-max="99999"
-            translateXForZip={isZipEnabled}
+            translateX={enableZipInput && !showZip}
           >
             {cardCVCInputRenderer({
               handleCardCVCChange: onChange =>
@@ -522,7 +525,12 @@ class CreditCardInput extends Component<Props, State> {
               }
             })}
           </InputWrapper>
-          <InputWrapper data-max="999999" translateXForZip={isZipEnabled}>
+          <InputWrapper
+            data-max="999999"
+            isActive={enableZipInput}
+            isZipActive={showZip}
+            translateX={enableZipInput && !showZip}
+          >
             {cardZipInputRenderer({
               handleCardZipChange: onChange =>
                 this.handleCardZipChange({ onChange }),
