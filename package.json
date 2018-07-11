@@ -34,7 +34,7 @@
     "credit-card-type": "^6.1.0",
     "is-valid-zip": "0.0.3",
     "payment": "^2.3.0",
-    "styled-components": "^2.2.3"
+    "styled-components": "3.3.3"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.15",
