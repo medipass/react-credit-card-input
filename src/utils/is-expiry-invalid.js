@@ -37,5 +37,6 @@ export default (expiryDate: string) => {
   ) {
     return ERROR_TEXT__DATE_OUT_OF_RANGE;
   }
+
   return false;
 };

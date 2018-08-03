@@ -30,10 +30,9 @@
     "test": "npm run lint && npm run flow && npm run prettier:list-diff"
   },
   "dependencies": {
-    "babel-loader": "^7.1.2",
-    "credit-card-type": "^6.1.0",
+    "credit-card-type": "6.3.0",
     "is-valid-zip": "0.0.3",
-    "payment": "^2.3.0",
+    "payment": "2.3.0",
     "styled-components": "3.3.3"
   },
   "devDependencies": {
@@ -41,6 +40,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-loader": "^7.1.2",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
