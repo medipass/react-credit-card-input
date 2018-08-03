@@ -75,7 +75,7 @@ import CreditCardInput from 'react-credit-card-input';
 
 #### Custom input renderer usage
 
-```
+```jsx
 <CreditCardInput
   cardCVCInputRenderer={({ handleCardCVCChange, props }) => (
     <input
