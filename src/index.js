@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import payment from 'payment';
 import creditCardType from 'credit-card-type';
 import styled from 'styled-components';
-import isValidZip from 'is-valid-zip';
 
 import {
   formatCardNumber,
@@ -16,6 +15,7 @@ import {
 } from './utils/formatter';
 import images from './utils/images';
 import isExpiryInvalid from './utils/is-expiry-invalid';
+import isZipValid from './utils/is-zip-valid';
 
 const Container = styled.div`
   display: inline-block;
@@ -342,7 +342,7 @@ class CreditCardInput extends Component<Props, State> {
   handleCardZipBlur = (
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
-    if (!isValidZip(e.target.value)) {
+    if (!isZipValid(e.target.value)) {
       this.setFieldInvalid('Zip code is invalid');
     }
 
@@ -359,7 +359,7 @@ class CreditCardInput extends Component<Props, State> {
 
     this.setFieldValid();
 
-    if (zipLength >= 5 && !isValidZip(zip)) {
+    if (zipLength >= 5 && !isZipValid(zip)) {
       this.setFieldInvalid('Zip code is invalid');
     }
 

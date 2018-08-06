@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "credit-card-type": "6.3.0",
-    "is-valid-zip": "0.0.3",
     "payment": "2.3.0",
     "styled-components": "3.3.3"
   },
