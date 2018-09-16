@@ -112,4 +112,25 @@ storiesOf('CreditCardInput', module)
         )}
       />
     </Container>
+  ))
+  .add('custom text values', () => (
+    <Container style={{ backgroundColor: '#f0f0f0' }}>
+      <CreditCardInput
+        customTextLabels={{
+          invalidCardNumber: 'El número de la tarjeta es inválido',
+          expiryError: {
+            invalidExpiryDate: 'La fecha de expiración es inválida',
+            monthOutOfRange: 'El mes de expiración debe estar entre 01 y 12',
+            yearOutOfRange: 'El año de expiración no puede estar en el pasado',
+            dateOutOfRange: 'La fecha de expiración no puede estar en el pasado'
+          },
+          invalidCvc: 'El código de seguridad es inválido',
+          invalidZipCode: 'El código postal es inválido',
+          cardNumberPlaceholder: 'Número de tarjeta',
+          expiryPlaceholder: 'MM/AA',
+          cvcPlaceholder: 'COD',
+          zipPlaceholder: 'C.P.'
+        }}
+      />
+    </Container>
   ));

@@ -55,6 +55,8 @@ import CreditCardInput from 'react-credit-card-input';
   <tr><td>  invalidStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the invalid field</td></tr>
   <tr><td colspan="4"></tr>
   <tr><td>  inputComponent </td><td>string, function, class (optional)</td><td>'input'</td> <td>Input component for the card number, expiry and CVC input</td></tr>
+  <tr><td colspan="4"></tr>
+  <tr><td>  customTextLabels </td><td>object (optional)</td><td>{}</td> <td>Object that defines custom label values.</td></tr>
 </tbody>
 </table>
 
@@ -99,6 +101,28 @@ import CreditCardInput from 'react-credit-card-input';
       )}
     />
   )}
+/>
+```
+
+#### Custom text labels usage
+
+```jsx
+<CreditCardInput
+  customTextLabels={{
+    invalidCardNumber: 'El número de la tarjeta es inválido',
+    expiryError: {
+      invalidExpiryDate: 'La fecha de expiración es inválida',
+      monthOutOfRange: 'El mes de expiración debe estar entre 01 y 12',
+      yearOutOfRange: 'El año de expiración no puede estar en el pasado',
+      dateOutOfRange: 'La fecha de expiración no puede estar en el pasado'
+    },
+    invalidCvc: 'El código de seguridad es inválido',
+    invalidZipCode: 'El código postal es inválido',
+    cardNumberPlaceholder: 'Número de tarjeta',
+    expiryPlaceholder: 'MM/AA',
+    cvcPlaceholder: 'COD',
+    zipPlaceholder: 'C.P.'
+  }}
 />
 ```
 

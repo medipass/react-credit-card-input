@@ -8,15 +8,30 @@ const ERROR_TEXT__DATE_OUT_OF_RANGE = 'Expiry date cannot be in the past';
 const EXPIRY_DATE_REGEX = /^(\d{2})\/(\d{4}|\d{2})$/;
 const MONTH_REGEX = /(0[1-9]|1[0-2])/;
 
-export default (expiryDate: string) => {
+type CustomExpiryErrorTexts = {
+  invalidExpiryDate: String,
+  monthOutOfRange: String,
+  yearOutOfRange: String,
+  dateOutOfRange: String
+};
+
+export default (
+  expiryDate: string,
+  customExpiryErrorTexts: ?CustomExpiryErrorTexts
+) => {
   const splitDate = expiryDate.split('/');
   if (!EXPIRY_DATE_REGEX.test(expiryDate)) {
-    return ERROR_TEXT__INVALID_EXPIRY_DATE;
+    return (
+      customExpiryErrorTexts.invalidExpiryDate ||
+      ERROR_TEXT__INVALID_EXPIRY_DATE
+    );
   }
 
   const expiryMonth = splitDate[0];
   if (!MONTH_REGEX.test(expiryMonth)) {
-    return ERROR_TEXT__MONTH_OUT_OF_RANGE;
+    return (
+      customExpiryErrorTexts.monthOutOfRange || ERROR_TEXT__MONTH_OUT_OF_RANGE
+    );
   }
 
   const expiryYear = splitDate[1];
@@ -28,14 +43,18 @@ export default (expiryDate: string) => {
     10
   );
   if (currentYear > parseInt(expiryYear, 10)) {
-    return ERROR_TEXT__YEAR_OUT_OF_RANGE;
+    return (
+      customExpiryErrorTexts.yearOutOfRange || ERROR_TEXT__YEAR_OUT_OF_RANGE
+    );
   }
 
   if (
     parseInt(expiryYear, 10) === currentYear &&
     parseInt(expiryMonth, 10) < currentMonth
   ) {
-    return ERROR_TEXT__DATE_OUT_OF_RANGE;
+    return (
+      customExpiryErrorTexts.dateOutOfRange || ERROR_TEXT__DATE_OUT_OF_RANGE
+    );
   }
 
   return false;

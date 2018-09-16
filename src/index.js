@@ -106,7 +106,8 @@ type Props = {
   inputClassName: string,
   inputStyle: Object,
   invalidClassName: string,
-  invalidStyle: Object
+  invalidStyle: Object,
+  customTextLabels: Object
 };
 type State = {
   cardImage: string,
@@ -146,7 +147,8 @@ class CreditCardInput extends Component<Props, State> {
     inputClassName: '',
     inputStyle: {},
     invalidClassName: 'is-invalid',
-    invalidStyle: {}
+    invalidStyle: {},
+    customTextLabels: {}
   };
 
   constructor(props: Props) {
@@ -178,8 +180,11 @@ class CreditCardInput extends Component<Props, State> {
   handleCardNumberBlur = (
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     if (!payment.fns.validateCardNumber(e.target.value)) {
-      this.setFieldInvalid('Card number is invalid');
+      this.setFieldInvalid(
+        customTextLabels.invalidCardNumber || 'Card number is invalid'
+      );
     }
 
     const { cardNumberInputProps } = this.props;
@@ -222,7 +227,10 @@ class CreditCardInput extends Component<Props, State> {
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
-          this.setFieldInvalid('Card number is invalid');
+          const { customTextLabels } = this.props;
+          this.setFieldInvalid(
+            customTextLabels.invalidCardNumber || 'Card number is invalid'
+          );
         }
       }
     }
@@ -247,7 +255,11 @@ class CreditCardInput extends Component<Props, State> {
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
     const cardExpiry = e.target.value.split(' / ').join('/');
-    const expiryError = isExpiryInvalid(cardExpiry);
+    const { customTextLabels } = this.props;
+    const expiryError = isExpiryInvalid(
+      cardExpiry,
+      customTextLabels.expiryError
+    );
     if (expiryError) {
       this.setFieldInvalid(expiryError);
     }
@@ -266,7 +278,11 @@ class CreditCardInput extends Component<Props, State> {
 
     this.setFieldValid();
 
-    const expiryError = isExpiryInvalid(cardExpiry);
+    const { customTextLabels } = this.props;
+    const expiryError = isExpiryInvalid(
+      cardExpiry,
+      customTextLabels.expiryError
+    );
     if (cardExpiry.length > 4) {
       if (expiryError) {
         this.setFieldInvalid(expiryError);
@@ -295,7 +311,8 @@ class CreditCardInput extends Component<Props, State> {
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
     if (!payment.fns.validateCardCVC(e.target.value)) {
-      this.setFieldInvalid('CVC is invalid');
+      const { customTextLabels } = this.props;
+      this.setFieldInvalid(customTextLabels.invalidCvc || 'CVC is invalid');
     }
 
     const { cardCVCInputProps } = this.props;
@@ -314,7 +331,8 @@ class CreditCardInput extends Component<Props, State> {
     this.setFieldValid();
     if (CVCLength >= 4) {
       if (!payment.fns.validateCardCVC(CVC, cardType)) {
-        this.setFieldInvalid('CVC is invalid');
+        const { customTextLabels } = this.props;
+        this.setFieldInvalid(customTextLabels.invalidCvc || 'CVC is invalid');
       }
     }
 
@@ -343,7 +361,10 @@ class CreditCardInput extends Component<Props, State> {
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
     if (!isZipValid(e.target.value)) {
-      this.setFieldInvalid('Zip code is invalid');
+      const { customTextLabels } = this.props;
+      this.setFieldInvalid(
+        customTextLabels.invalidZipCode || 'Zip code is invalid'
+      );
     }
 
     const { cardZipInputProps } = this.props;
@@ -360,7 +381,10 @@ class CreditCardInput extends Component<Props, State> {
     this.setFieldValid();
 
     if (zipLength >= 5 && !isZipValid(zip)) {
-      this.setFieldInvalid('Zip code is invalid');
+      const { customTextLabels } = this.props;
+      this.setFieldInvalid(
+        customTextLabels.invalidZipCode || 'Zip code is invalid'
+      );
     }
 
     const { cardZipInputProps } = this.props;
@@ -424,7 +448,8 @@ class CreditCardInput extends Component<Props, State> {
       fieldStyle,
       inputClassName,
       inputStyle,
-      invalidStyle
+      invalidStyle,
+      customTextLabels
     } = this.props;
 
     return (
@@ -458,7 +483,8 @@ class CreditCardInput extends Component<Props, State> {
                 },
                 autoComplete: 'cc-number',
                 className: `credit-card-input ${inputClassName}`,
-                placeholder: 'Card number',
+                placeholder:
+                  customTextLabels.cardNumberPlaceholder || 'Card number',
                 type: 'tel',
                 ...cardNumberInputProps,
                 onBlur: this.handleCardNumberBlur(),
@@ -485,7 +511,7 @@ class CreditCardInput extends Component<Props, State> {
                 },
                 autoComplete: 'cc-exp',
                 className: `credit-card-input ${inputClassName}`,
-                placeholder: 'MM/YY',
+                placeholder: customTextLabels.expiryPlaceholder || 'MM/YY',
                 type: 'tel',
                 ...cardExpiryInputProps,
                 onBlur: this.handleCardExpiryBlur(),
@@ -512,7 +538,7 @@ class CreditCardInput extends Component<Props, State> {
                 },
                 autoComplete: 'off',
                 className: `credit-card-input ${inputClassName}`,
-                placeholder: 'CVC',
+                placeholder: customTextLabels.cvcPlaceholder || 'CVC',
                 type: 'tel',
                 ...cardCVCInputProps,
                 onBlur: this.handleCardCVCBlur(),
@@ -539,7 +565,7 @@ class CreditCardInput extends Component<Props, State> {
                 },
                 className: `credit-card-input zip-input ${inputClassName}`,
                 pattern: '[0-9]*',
-                placeholder: 'Zip',
+                placeholder: customTextLabels.zipPlaceholder || 'Zip',
                 type: 'text',
                 ...cardZipInputProps,
                 onBlur: this.handleCardZipBlur(),
