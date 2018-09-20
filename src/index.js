@@ -195,7 +195,7 @@ class CreditCardInput extends Component<Props, State> {
   handleCardNumberChange = (
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
-    const { enableZipInput } = this.props;
+    const { customTextLabels, enableZipInput } = this.props;
     const cardNumber = e.target.value;
     const cardNumberLength = cardNumber.split(' ').join('').length;
     const cardType = payment.fns.cardType(cardNumber);
@@ -227,7 +227,6 @@ class CreditCardInput extends Component<Props, State> {
           break;
         }
         if (cardNumberLength === lastCardTypeLength) {
-          const { customTextLabels } = this.props;
           this.setFieldInvalid(
             customTextLabels.invalidCardNumber || 'Card number is invalid'
           );
@@ -254,8 +253,8 @@ class CreditCardInput extends Component<Props, State> {
   handleCardExpiryBlur = (
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
-    const cardExpiry = e.target.value.split(' / ').join('/');
     const { customTextLabels } = this.props;
+    const cardExpiry = e.target.value.split(' / ').join('/');
     const expiryError = isExpiryInvalid(
       cardExpiry,
       customTextLabels.expiryError
@@ -272,13 +271,13 @@ class CreditCardInput extends Component<Props, State> {
   handleCardExpiryChange = (
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     const cardExpiry = e.target.value.split(' / ').join('/');
 
     this.cardExpiryField.value = formatExpiry(cardExpiry);
 
     this.setFieldValid();
 
-    const { customTextLabels } = this.props;
     const expiryError = isExpiryInvalid(
       cardExpiry,
       customTextLabels.expiryError
@@ -310,8 +309,8 @@ class CreditCardInput extends Component<Props, State> {
   handleCardCVCBlur = (
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     if (!payment.fns.validateCardCVC(e.target.value)) {
-      const { customTextLabels } = this.props;
       this.setFieldInvalid(customTextLabels.invalidCvc || 'CVC is invalid');
     }
 
@@ -323,6 +322,7 @@ class CreditCardInput extends Component<Props, State> {
   handleCardCVCChange = (
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     const CVC = e.target.value;
     const CVCLength = CVC.length;
     const isZipFieldAvailable = this.props.enableZipInput && this.state.showZip;
@@ -331,7 +331,6 @@ class CreditCardInput extends Component<Props, State> {
     this.setFieldValid();
     if (CVCLength >= 4) {
       if (!payment.fns.validateCardCVC(CVC, cardType)) {
-        const { customTextLabels } = this.props;
         this.setFieldInvalid(customTextLabels.invalidCvc || 'CVC is invalid');
       }
     }
@@ -360,8 +359,8 @@ class CreditCardInput extends Component<Props, State> {
   handleCardZipBlur = (
     { onBlur }: { onBlur?: ?Function } = { onBlur: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     if (!isZipValid(e.target.value)) {
-      const { customTextLabels } = this.props;
       this.setFieldInvalid(
         customTextLabels.invalidZipCode || 'Zip code is invalid'
       );
@@ -375,13 +374,13 @@ class CreditCardInput extends Component<Props, State> {
   handleCardZipChange = (
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
+    const { customTextLabels } = this.props;
     const zip = e.target.value;
     const zipLength = zip.length;
 
     this.setFieldValid();
 
     if (zipLength >= 5 && !isZipValid(zip)) {
-      const { customTextLabels } = this.props;
       this.setFieldInvalid(
         customTextLabels.invalidZipCode || 'Zip code is invalid'
       );

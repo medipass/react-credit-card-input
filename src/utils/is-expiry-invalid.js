@@ -9,15 +9,15 @@ const EXPIRY_DATE_REGEX = /^(\d{2})\/(\d{4}|\d{2})$/;
 const MONTH_REGEX = /(0[1-9]|1[0-2])/;
 
 type CustomExpiryErrorTexts = {
-  invalidExpiryDate: String,
-  monthOutOfRange: String,
-  yearOutOfRange: String,
-  dateOutOfRange: String
+  invalidExpiryDate?: string,
+  monthOutOfRange?: string,
+  yearOutOfRange?: string,
+  dateOutOfRange?: string
 };
 
 export default (
   expiryDate: string,
-  customExpiryErrorTexts: ?CustomExpiryErrorTexts
+  customExpiryErrorTexts?: CustomExpiryErrorTexts = {}
 ) => {
   const splitDate = expiryDate.split('/');
   if (!EXPIRY_DATE_REGEX.test(expiryDate)) {
