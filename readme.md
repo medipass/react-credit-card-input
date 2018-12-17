@@ -80,7 +80,7 @@ import CreditCardInput from 'react-credit-card-input';
 
 ```jsx
 <CreditCardInput
-  onError={err => console.log(`credit card input error: ${err}`)}
+  onError={({ inputName, err }) => console.log(`credit card input error: ${err}`)}
   cardCVCInputProps={{
     onBlur: e => console.log('cvc blur', e),
     onChange: e => console.log('cvc change', e),

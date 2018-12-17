@@ -441,7 +441,7 @@ class CreditCardInput extends Component<Props, State> {
     }
 
     if (onError) {
-      onError(errorText);
+      onError({ inputName, error: errorText });
     }
   };
 
