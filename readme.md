@@ -34,12 +34,13 @@ import CreditCardInput from 'react-credit-card-input';
 <table>
 <thead><tr><th>Prop</th><th>Type</th><th>Default value</th><th>Description</th></tr></thead>
 <tbody>
-  <tr><td>  cardNumberInputProps </td><td>object (optional)</td><td>{}</td> <td>Card number input element props<br/>(e.g. { value: cardNumber, onChange: this.handleCardNumberChange, onBlur: this.handleCardNumberBlur })</td></tr>
-  <tr><td>  cardExpiryInputProps </td><td>object (optional)</td><td>{}</td> <td>Card expiry date input element props<br/>(e.g. { value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur })</td></tr>
-  <tr><td>  cardCVCInputProps </td><td>object (optional)</td><td>{}</td> <td>Card CVC input element props<br/>(e.g. { value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur })</td></tr>
+  <tr><td>  cardNumberInputProps </td><td>object (optional)</td><td>{}</td> <td>Card number input element props<br/>(e.g. { value: cardNumber, onChange: this.handleCardNumberChange, onBlur: this.handleCardNumberBlur, onError: this.handleCardNumberError })</td></tr>
+  <tr><td>  cardExpiryInputProps </td><td>object (optional)</td><td>{}</td> <td>Card expiry date input element props<br/>(e.g. { value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur, onError: this.handleCardExpiryError })</td></tr>
+  <tr><td>  cardCVCInputProps </td><td>object (optional)</td><td>{}</td> <td>Card CVC input element props<br/>(e.g. { value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur, onError: this.handleCardCVCError })</td></tr>
   <tr><td>  cardNumberInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card number input renderer</td></tr>
   <tr><td>  cardExpiryInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card expiry date input renderer</td></tr>
   <tr><td>  cardCVCInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card CVC input renderer</tr>
+  <tr><td>  onError </td><td>Function (optional)</td><td></td> <td>Invokes on field errors. Recieves errorMessage argument.</tr>
   <tr><td colspan="4"></tr>
   <tr><td>  cardImageClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the card type image</td></tr>
   <tr><td>  cardImageStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the card type image</td></tr>
@@ -74,6 +75,30 @@ import CreditCardInput from 'react-credit-card-input';
   <tr><td>  props </td><td>Object</td> <td>Input component props</td></tr>
 </tbody>
 </table>
+
+#### Error handling
+
+```jsx
+<CreditCardInput
+  onError={err => console.log(`credit card input error: ${err}`)}
+  cardCVCInputProps={{
+    onBlur: e => console.log('cvc blur', e),
+    onChange: e => console.log('cvc change', e),
+    onError: err => console.log(`cvc error: ${err}`)
+  }}
+  cardExpiryInputProps={{
+    onBlur: e => console.log('expiry blur', e),
+    onChange: e => console.log('expiry change', e),
+    onError: err => console.log(`expiry error: ${err}`)
+  }}
+  cardNumberInputProps={{
+    onBlur: e => console.log('number blur', e),
+    onChange: e => console.log('number change', e),
+    onError: err => console.log(`number error: ${err}`)
+  }}
+/>
+/>
+```
 
 #### Custom input renderer usage
 
