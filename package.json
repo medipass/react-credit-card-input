@@ -31,8 +31,7 @@
   },
   "dependencies": {
     "credit-card-type": "6.3.0",
-    "payment": "2.3.0",
-    "styled-components": "3.3.3"
+    "payment": "2.3.0"
   },
   "devDependencies": {
     "@storybook/react": "^3.2.15",
@@ -63,7 +62,8 @@
   },
   "peerDependencies": {
     "react": "^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0",
-    "react-dom": "^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0"
+    "react-dom": "^0.14.9 || ^15.3.0 || ^16.0.0-rc || ^16.0",
+    "styled-components": ">=3.0.0"
   },
   "eslintConfig": {
     "extends": [

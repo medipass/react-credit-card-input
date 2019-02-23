@@ -12,7 +12,7 @@
 ## Install
 
 ```
-$ npm install --save react-credit-card-input
+$ npm install --save react-credit-card-input styled-components
 ```
 
 
