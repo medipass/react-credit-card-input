@@ -118,7 +118,7 @@ export const hasZipReachedMaxLength = (type, currentValueLength) =>
   currentValueLength >= DEFAULT_ZIP_LENGTH;
 export const formatCardNumber = cardNumber => {
   const cardType = getCardTypeByValue(cardNumber);
-  if (!cardType) return cardNumber;
+  if (!cardType) return (cardNumber.match(/\d+/g) || []).join('');
   const { format } = cardType;
   if (format.global) {
     return cardNumber.match(format).join(' ');
@@ -132,13 +132,16 @@ export const formatCardNumber = cardNumber => {
   }
   return cardNumber;
 };
+export const formatCvc = cvc => {
+  return (cvc.match(/\d+/g) || []).join('');
+};
 export const formatExpiry = prevExpiry => {
   if (!prevExpiry) return null;
   let expiry = prevExpiry;
   if (/^[2-9]$/.test(expiry)) {
     expiry = `0${expiry}`;
   }
-  expiry = expiry.match(/(\d{1,2})/g);
+  expiry = expiry.match(/(\d{1,2})/g) || [];
   if (expiry.length === 1) {
     if (prevExpiry.includes('/')) {
       return expiry[0];
@@ -146,6 +149,10 @@ export const formatExpiry = prevExpiry => {
     if (/\d{2}/.test(expiry)) {
       return `${expiry[0]} / `;
     }
+  }
+  if (expiry.length > 2) {
+    const [, month, year] = expiry.join('').match(/^(\d{2}).*(\d{2})$/) || [];
+    return [month, year].join(' / ');
   }
   return expiry.join(' / ');
 };

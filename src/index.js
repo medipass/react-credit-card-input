@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import {
   formatCardNumber,
   formatExpiry,
+  formatCvc,
   hasCardNumberReachedMaxLength,
   hasCVCReachedMaxLength,
   hasZipReachedMaxLength,
@@ -292,14 +293,12 @@ class CreditCardInput extends Component<Props, State> {
     const cardExpiry = e.target.value.split(' / ').join('/');
 
     this.cardExpiryField.value = formatExpiry(cardExpiry);
+    const value = this.cardExpiryField.value.split(' / ').join('/');
 
     this.setFieldValid();
 
-    const expiryError = isExpiryInvalid(
-      cardExpiry,
-      customTextLabels.expiryError
-    );
-    if (cardExpiry.length > 4) {
+    const expiryError = isExpiryInvalid(value, customTextLabels.expiryError);
+    if (value.length > 4) {
       if (expiryError) {
         this.setFieldInvalid(expiryError, 'cardExpiry');
       } else {
@@ -343,7 +342,9 @@ class CreditCardInput extends Component<Props, State> {
     { onChange }: { onChange?: ?Function } = { onChange: null }
   ) => (e: SyntheticInputEvent<*>) => {
     const { customTextLabels } = this.props;
-    const CVC = e.target.value;
+    const value = formatCvc(e.target.value);
+    this.cvcField.value = value;
+    const CVC = value;
     const CVCLength = CVC.length;
     const isZipFieldAvailable = this.props.enableZipInput && this.state.showZip;
     const cardType = payment.fns.cardType(this.state.cardNumber);
@@ -514,6 +515,7 @@ class CreditCardInput extends Component<Props, State> {
                 ref: cardNumberField => {
                   this.cardNumberField = cardNumberField;
                 },
+                maxlength: '19',
                 autoComplete: 'cc-number',
                 className: `credit-card-input ${inputClassName}`,
                 placeholder:
@@ -569,6 +571,7 @@ class CreditCardInput extends Component<Props, State> {
                 ref: cvcField => {
                   this.cvcField = cvcField;
                 },
+                maxlength: '5',
                 autoComplete: 'off',
                 className: `credit-card-input ${inputClassName}`,
                 placeholder: customTextLabels.cvcPlaceholder || 'CVC',
@@ -596,6 +599,7 @@ class CreditCardInput extends Component<Props, State> {
                 ref: zipField => {
                   this.zipField = zipField;
                 },
+                maxlength: '6',
                 className: `credit-card-input zip-input ${inputClassName}`,
                 pattern: '[0-9]*',
                 placeholder: customTextLabels.zipPlaceholder || 'Zip',
