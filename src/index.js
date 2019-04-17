@@ -89,6 +89,7 @@ const CARD_TYPES = {
 };
 
 type Props = {
+  CARD_TYPES: Object,
   cardCVCInputRenderer: Function,
   cardExpiryInputRenderer: Function,
   cardNumberInputRenderer: Function,
@@ -107,6 +108,7 @@ type Props = {
   fieldClassName: string,
   fieldStyle: Object,
   enableZipInput: boolean,
+  images: Object,
   inputComponent: Function | Object | string,
   inputClassName: string,
   inputStyle: Object,
@@ -158,8 +160,10 @@ class CreditCardInput extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
+    this.CARD_TYPES = Object.assign({}, CARD_TYPES, props.CARD_TYPES);
+    this.images = Object.assign({}, images, props.images);
     this.state = {
-      cardImage: images.placeholder,
+      cardImage: this.images.placeholder,
       cardNumberLength: 0,
       cardNumber: null,
       errorText: null,
@@ -170,6 +174,7 @@ class CreditCardInput extends Component<Props, State> {
   componentDidMount = () => {
     this.setState({ cardNumber: this.cardNumberField.value }, () => {
       const cardType = payment.fns.cardType(this.state.cardNumber);
+      const images = this.images;
       this.setState({
         cardImage: images[cardType] || images.placeholder
       });
@@ -206,12 +211,14 @@ class CreditCardInput extends Component<Props, State> {
       enableZipInput,
       cardNumberInputProps
     } = this.props;
+    const images = this.images;
     const cardNumber = e.target.value;
     const cardNumberLength = cardNumber.split(' ').join('').length;
     const cardType = payment.fns.cardType(cardNumber);
     const cardTypeInfo =
-      creditCardType.getTypeInfo(creditCardType.types[CARD_TYPES[cardType]]) ||
-      {};
+      creditCardType.getTypeInfo(
+        creditCardType.types[this.CARD_TYPES[cardType]]
+      ) || {};
     const cardTypeLengths = cardTypeInfo.lengths || [16];
 
     this.cardNumberField.value = formatCardNumber(cardNumber);
