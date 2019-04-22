@@ -31,50 +31,47 @@ import CreditCardInput from 'react-credit-card-input';
 
 ## Available props
 
-<table>
-<thead><tr><th>Prop</th><th>Type</th><th>Default value</th><th>Description</th></tr></thead>
-<tbody>
-  <tr><td>  cardNumberInputProps </td><td>object (optional)</td><td>{}</td> <td>Card number input element props<br/>(e.g. { value: cardNumber, onChange: this.handleCardNumberChange, onBlur: this.handleCardNumberBlur, onError: this.handleCardNumberError })</td></tr>
-  <tr><td>  cardExpiryInputProps </td><td>object (optional)</td><td>{}</td> <td>Card expiry date input element props<br/>(e.g. { value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur, onError: this.handleCardExpiryError })</td></tr>
-  <tr><td>  cardCVCInputProps </td><td>object (optional)</td><td>{}</td> <td>Card CVC input element props<br/>(e.g. { value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur, onError: this.handleCardCVCError })</td></tr>
-  <tr><td>  cardNumberInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card number input renderer</td></tr>
-  <tr><td>  cardExpiryInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card expiry date input renderer</td></tr>
-  <tr><td>  cardCVCInputRenderer </td><td>Function (view input renderer props below)</td><td></td> <td>Card CVC input renderer</tr>
-  <tr><td>  onError </td><td>Function (optional)</td><td></td> <td>Invokes on field errors. Recieves errorMessage argument.</tr>
-  <tr><td colspan="4"></tr>
-  <tr><td>  cardImageClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the card type image</td></tr>
-  <tr><td>  cardImageStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the card type image</td></tr>
-  <tr><td>  containerClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the field container</td></tr>
-  <tr><td>  containerStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the field container</td></tr>
-  <tr><td>  dangerTextClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the danger text</td></tr>
-  <tr><td>  dangerTextStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the danger text container</td></tr>
-  <tr><td>  fieldClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the field</td></tr>
-  <tr><td>  fieldStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the field</td></tr>
-  <tr><td>  inputClassName </td><td>string (optional)</td><td>''</td> <td>Class name for the inputs</td></tr>
-  <tr><td>  inputStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the inputs</td></tr>
-  <tr><td>  invalidClassName </td><td>string (optional)</td><td>'is-invalid'</td> <td>Class name for the invalid field</td></tr>
-  <tr><td>  invalidStyle </td><td>object (optional)</td><td>{}</td> <td>Style for the invalid field</td></tr>
-  <tr><td colspan="4"></tr>
-  <tr><td>  inputComponent </td><td>string, function, class (optional)</td><td>'input'</td> <td>Input component for the card number, expiry and CVC input</td></tr>
-  <tr><td colspan="4"></tr>
-  <tr><td>  customTextLabels </td><td>object (optional)</td><td>{}</td> <td>Object that defines custom label values.</td></tr>
-</tbody>
-</table>
+| Prop                    | Type                                       | Default value | Description                     |
+| ----------------------- | ------------------------------------------ | -- | ------------------------------------------ |
+| cardNumberInputProps    | object (optional)                          | {} | Card number input element props            |
+|                         |                                            |    | (e.g. `{ value: cardNumber, onChange: this.handleCardNumberChange, onBlur: this.handleCardNumberBlur, onError: this.handleCardNumberError }` ) |
+| cardExpiryInputProps    | object (optional)                          | {} | Card expiry date input element props       |
+|                         |                                            |    | (e.g. `{ value: expiry, onChange: this.handleCardExpiryChange, onBlur: this.handleCardExpiryBlur, onError: this.handleCardExpiryError }`) |
+| cardCVCInputProps       | object (optional)                          | {} | Card CVC input element props               |
+|                         |                                            |    | (e.g. `{ value: cvc, onChange: this.handleCardCVCChange, onBlur: this.handleCardCVCBlur, onError: this.handleCardCVCError }`) |
+| cardNumberInputRenderer | Function (view input renderer props below) |    | Card number input renderer                 |
+| cardExpiryInputRenderer | Function (view input renderer props below) |    | Card expiry date input renderer            |
+| cardCVCInputRenderer    | Function (view input renderer props below) |    | Card CVC input renderer                    |
+| onError                 | Function (optional)                        |    | Invokes on field errors. Recieves errorMessage argument. |
+|                         |                                            |    |                                            |
+| cardImageClassName      | string (optional)                          | '' | Class name for the card type image         |
+| cardImageStyle          | object (optional)                          | {} | Style for the card type image              |
+| containerClassName      | string (optional)                          | '' | Class name for the field container         |
+| containerStyle          | object (optional)                          | {} | Style for the field container              |
+| dangerTextClassName     | string (optional)                          | '' | Class name for the danger text             |
+| dangerTextStyle         | object (optional)                          | {} | Style for the danger text container        |
+| fieldClassName          | string (optional)                          | '' | Class name for the field                   |
+| fieldStyle              | object (optional)                          | {} | Style for the field                        |
+| inputClassName          | string (optional)                          | '' | Class name for the inputs                  |
+| inputStyle              | object (optional)                          | {} | Style for the inputs                       |
+| invalidClassName        | string (optional)                          | 'is-invalid' | Class name for the invalid field |
+| invalidStyle            | object (optional)                          | {} | Style for the invalid field                |
+|                         |                                            |    |                                            |
+| inputComponent          | string, function, class (optional)         | 'input' | Input component for the card number, expiry and CVC input |
+|                         |                                            |    |                                            |
+| customTextLabels        | object (optional)                          | {} | Object that defines custom label values.   |
 
 ### Input renderer props
 
-<table>
-<thead><tr><th>Prop</th><th>Type</th><th>Description</th></tr></thead>
-<tbody>
-  <tr><td>  handleCardNumberChange </td><td>Function</td> <td>Handle card number change.</td></tr>
-  <tr><td>  handleCardNumberBlur </td><td>Function</td> <td>Handle card number blur.</td></tr>
-  <tr><td>  handleCardExpiryChange </td><td>Function</td> <td>Handle card expiry change.</td></tr>
-  <tr><td>  handleCardExpiryBlur </td><td>Function</td> <td>Handle card expiry blur.</td></tr>
-  <tr><td>  handleCardCVCChange </td><td>Function</td> <td>Handle card CVC change.</td></tr>
-  <tr><td>  handleCardCVCBlur </td><td>Function</td> <td>Handle card CVC blur.</td></tr>
-  <tr><td>  props </td><td>Object</td> <td>Input component props</td></tr>
-</tbody>
-</table>
+| Prop                   | Type     | Description                |
+| ---------------------- | -------- | -------------------------- |
+| handleCardNumberChange | Function | Handle card number change. |
+| handleCardNumberBlur   | Function | Handle card number blur.   |
+| handleCardExpiryChange | Function | Handle card expiry change. |
+| handleCardExpiryBlur   | Function | Handle card expiry blur.   |
+| handleCardCVCChange    | Function | Handle card CVC change.    |
+| handleCardCVCBlur      | Function | Handle card CVC blur.      |
+| props                  | Object   | Input component props      |
 
 #### Error handling
 
