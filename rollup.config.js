@@ -8,20 +8,17 @@ export default {
     format: 'umd',
     globals: {
       react: 'React',
-      'react-dom': 'ReactDOM',
       payment: 'payment',
       'credit-card-type': 'creditCardType',
-      'styled-components': 'styled',
-      'is-valid-zip': 'isValidZip'
+      'styled-components': 'styled'
     }
   },
+  sourcemap: true,
   external: [
     'react',
-    'react-dom',
     'credit-card-type',
     'payment',
-    'styled-components',
-    'is-valid-zip'
+    'styled-components'
   ],
   plugins: [
     babel({
