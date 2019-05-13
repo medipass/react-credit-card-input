@@ -125,7 +125,10 @@ type State = {
   showZip: boolean
 };
 
-const inputRenderer = ({ props }: Object) => <input {...props} />;
+const inputRenderer = ({ inputComponent, props }: Object) => {
+  const Input = inputComponent || 'input';
+  return <Input {...props} />;
+};
 
 class CreditCardInput extends Component<Props, State> {
   cardExpiryField: any;
@@ -488,6 +491,7 @@ class CreditCardInput extends Component<Props, State> {
       fieldClassName,
       fieldStyle,
       inputClassName,
+      inputComponent,
       inputStyle,
       invalidStyle,
       customTextLabels
@@ -513,6 +517,7 @@ class CreditCardInput extends Component<Props, State> {
             data-max="9999 9999 9999 9999 9999"
           >
             {cardNumberInputRenderer({
+              inputComponent,
               handleCardNumberChange: onChange =>
                 this.handleCardNumberChange({ onChange }),
               handleCardNumberBlur: onBlur =>
@@ -542,6 +547,7 @@ class CreditCardInput extends Component<Props, State> {
             translateX={enableZipInput && !showZip}
           >
             {cardExpiryInputRenderer({
+              inputComponent,
               handleCardExpiryChange: onChange =>
                 this.handleCardExpiryChange({ onChange }),
               handleCardExpiryBlur: onBlur =>
@@ -570,6 +576,7 @@ class CreditCardInput extends Component<Props, State> {
             translateX={enableZipInput && !showZip}
           >
             {cardCVCInputRenderer({
+              inputComponent,
               handleCardCVCChange: onChange =>
                 this.handleCardCVCChange({ onChange }),
               handleCardCVCBlur: onBlur => this.handleCardCVCBlur({ onBlur }),
@@ -598,6 +605,7 @@ class CreditCardInput extends Component<Props, State> {
             translateX={enableZipInput && !showZip}
           >
             {cardZipInputRenderer({
+              inputComponent,
               handleCardZipChange: onChange =>
                 this.handleCardZipChange({ onChange }),
               handleCardZipBlur: onBlur => this.handleCardZipBlur({ onBlur }),
