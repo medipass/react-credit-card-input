@@ -2,6 +2,8 @@
 
 > A credit/debit card input field for React
 
+> **NOTE:** While React Credit Card Input is still supported, it's highly recommended to check out the [React Payment Inputs](https://github.com/medipass/react-payment-inputs) (the rewritten version of this library).
+
 ## Example
 
 [Click here for an interactive demo](https://medipass.github.io/react-credit-card-input)
